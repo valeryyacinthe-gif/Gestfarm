@@ -1696,6 +1696,7 @@ export default function App() {
       </button>
       {authMode === "recovery" && <button type="button" onClick={() => { setAuthMode("login"); setAuthError(""); }} style={styles.linkButton}>Retour à la connexion</button>}
       <button type="button" onClick={() => setPrivacyOpen(true)} style={{ ...styles.linkButton, marginTop: 8 }}>Politique de confidentialité</button>
+      {authMode !== "recovery" && <a href="https://github.com/valeryyacinthe-gif/GESTFARM-Android/releases/latest/download/app-debug.apk" target="_blank" rel="noreferrer" style={{display:"block",marginTop:14,padding:"12px 16px",border:"1px solid #b8d8c1",borderRadius:12,color:GREEN,fontWeight:750,fontSize:14,textAlign:"center",textDecoration:"none"}}>Télécharger l’application Android</a>}
     </form>
     {signupPrivacyOpen && <div style={styles.overlay} onMouseDown={(e)=>{if(e.target===e.currentTarget) rejectPrivacyAndCancelSignup();}}>
       <section role="dialog" aria-modal="true" aria-label="Acceptation de la politique de confidentialité" className="gf-modal" style={{...styles.modal,width:"min(100%,720px)",maxHeight:"92dvh",overflowY:"auto"}} onClick={e=>e.stopPropagation()}>
@@ -1732,6 +1733,10 @@ export default function App() {
     if (!activeFarm && page !== "farms" && page !== "suggestions") return <div style={styles.panel}><Empty text="Commence par créer ton premier élevage dans « Mes élevages »."/></div>;
     if (page === "dashboard") return <>
       <SectionTitle title="Tableau de bord" subtitle={activeFarm ? `Vue d’ensemble — ${activeFarm.name}` : "Vue d’ensemble de ton activité"} action={<Button secondary onClick={loadAll}><RefreshCw size={15}/> Actualiser</Button>}/>
+      <div style={{...styles.panel,marginBottom:16,display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,flexWrap:"wrap"}}>
+        <div><b style={{color:GREEN}}>GESTFARM sur Android</b><div style={{fontSize:12,color:"#718077",marginTop:4}}>Téléchargez la dernière version de l’application sur votre téléphone.</div></div>
+        <a href="https://github.com/valeryyacinthe-gif/GESTFARM-Android/releases/latest/download/app-debug.apk" target="_blank" rel="noreferrer" style={{display:"inline-flex",alignItems:"center",justifyContent:"center",padding:"11px 15px",borderRadius:10,background:GREEN,color:"#fff",fontWeight:750,fontSize:13,textDecoration:"none",whiteSpace:"nowrap"}}>Télécharger l’APK</a>
+      </div>
       <div style={styles.statsGrid}>
         <Card title="Fiches d’élevage" value={farmGroups.length} hint="Élevages suivis séparément" icon={Tractor}/>
         <Card title="Animaux présents" value={animals.toLocaleString("fr-FR")} hint="Effectif actuel des groupes" icon={Activity}/>
