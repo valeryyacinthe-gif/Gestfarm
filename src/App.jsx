@@ -178,6 +178,7 @@ export default function App() {
   const [workspaceMode, setWorkspaceMode] = useState("enterprise");
   const [workspaceChoiceOpen, setWorkspaceChoiceOpen] = useState(false);
   const [workspaceBusy, setWorkspaceBusy] = useState(false);
+  const [workspaceError, setWorkspaceError] = useState("");
   const [authMode, setAuthMode] = useState("login");
   const [recoveryMode, setRecoveryMode] = useState(false);
   const [recoveryPassword, setRecoveryPassword] = useState("");
@@ -749,11 +750,12 @@ export default function App() {
   }
   async function saveWorkspaceMode(mode) {
     if (!session?.user || !["individual", "enterprise"].includes(mode)) return;
-    setWorkspaceBusy(true); setError(""); setNotice("");
+    setWorkspaceBusy(true); setWorkspaceError(""); setError(""); setNotice("");
     const { data, error } = await supabase.auth.updateUser({ data: { gestfarm_workspace_mode: mode } });
     if (error) {
-      setError("Impossible d’enregistrer le mode d’interface : " + error.message);
+      setWorkspaceError("Impossible d’enregistrer le mode d’interface : " + error.message);
     } else {
+      setWorkspaceError("");
       setWorkspaceMode(mode);
       setWorkspaceChoiceOpen(false);
       if (mode === "individual" && (page === "team" || page === "tasks")) setPage("dashboard");
@@ -2162,6 +2164,7 @@ export default function App() {
                 <Button disabled={workspaceBusy} onClick={()=>saveWorkspaceMode("enterprise")}>{workspaceBusy?"Enregistrement…":"Choisir cette interface"}</Button>
               </div>
             </div>
+            {workspaceError && <p style={styles.error}>{workspaceError}</p>}
             <p style={{fontSize:11,color:"#7b887f",lineHeight:1.5,margin:"14px 0 0"}}>Le mode choisi ne donne aucun droit supplémentaire : les accès aux exploitations restent contrôlés par les autorisations du compte et de chaque promoteur.</p>
           </section>
         </div>}
