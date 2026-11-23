@@ -2312,7 +2312,7 @@ export default function App() {
       }
     `}</style>
     <aside className={`gf-sidebar${mobileOpen ? " gf-sidebar-open" : ""}`} style={{ ...styles.sidebar, transform: mobileOpen ? "translateX(0)" : undefined }}>
-      <div style={styles.brand}><img src={GESTFARM_ICON} alt="" style={{ width: 42, height: 42, objectFit: "contain", flex: "0 0 auto" }}/><div><b>GESTFARM</b><small>by Kenfack Sobtia</small></div></div>
+      <div style={styles.brand}><img src={GESTFARM_ICON} alt="" style={{ width: 42, height: 42, objectFit: "contain", flex: "0 0 auto" }}/><div><b>GESTFARM</b><small>by KS</small></div></div>
       <div style={styles.navLabel}>MENU PRINCIPAL</div>
       {visibleNav.map(([id,label,Icon])=><button key={id} onClick={()=>{setPage(id);setMobileOpen(false);setError("");}} style={{...styles.navItem,background:((page===id)||(id==="breeders"&&(page==="rabbits"||page==="pigs")))?"#eaf3ec":"transparent",color:((page===id)||(id==="breeders"&&(page==="rabbits"||page==="pigs")))?GREEN:"#66746b",fontWeight:((page===id)||(id==="breeders"&&(page==="rabbits"||page==="pigs")))?700:500}}><Icon size={18}/>{label}</button>)}
       <div style={{ marginTop:"auto", paddingTop:20 }}><button onClick={logout} style={styles.navItem}><LogOut size={18}/> Déconnexion</button></div>
