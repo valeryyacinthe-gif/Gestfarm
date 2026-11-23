@@ -339,9 +339,7 @@ export default function App() {
   }, [session?.user?.id, session?.user?.user_metadata?.gestfarm_workspace_mode, session?.user?.user_metadata?.gestfarm_workspace_modes, farms, selectedFarm, workspacePickerOpen]);
   useEffect(() => {
     if (!session?.user?.id || !farms.length) return;
-    const personal = farms.filter(f => f.owner_id === session.user.id);
-    const invited = farms.filter(f => f.owner_id !== session.user.id);
-    if (personal.length && invited.length) {
+    if (farms.length > 1) {
       setWorkspacePickerOpen(true);
       setWorkspaceChoiceOpen(false);
     }
