@@ -862,8 +862,16 @@ export default function App() {
       } else { await loadAll(); }
       if (farm?.id) setSelectedFarm(farm.id);
     } catch (err) {
-      if (createdCycleId) await supabase.from("production_cycles").delete().eq("id", createdCycleId);
-      if (createdFarmId) await loadAll();
+      // Compensation métier : les cycles sont archivés (pas supprimés physiquement).
+      // Si cette action avait créé la ferme, son archivage englobe aussi le cycle.
+      if (createdFarmId) {
+        const { error: cleanupError } = await supabase.rpc("gestfarm_archive_farm", { p_farm_id: createdFarmId });
+        if (cleanupError) console.warn("Nettoyage de la ferme créée partiellement", cleanupError.message);
+      } else if (createdCycleId) {
+        const { error: cleanupError } = await supabase.rpc("gestfarm_archive_cycle", { p_cycle_id: createdCycleId });
+        if (cleanupError) console.warn("Nettoyage du cycle créé partiellement", cleanupError.message);
+      }
+      if (createdFarmId || createdCycleId) await loadAll();
       setError(err.message || "Impossible d’enregistrer cette fiche.");
     }
     finally { setBusy(false); }
