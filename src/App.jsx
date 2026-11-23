@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { supabase } from "./supabase";
 import { stockEquivalent } from "./utils/stock";
+import { permissionsForRole, resolveMemberStatus } from "./utils/members";
 
 // Stockage local hors connexion (IndexedDB) : isolé par compte utilisateur.
 const GESTFARM_DB = "gestfarm-offline-v1";
@@ -1472,25 +1473,16 @@ export default function App() {
     ["historique", "Journal d’activité"]
   ];
   const permissionActions = [["read", "Consulter"], ["create", "Ajouter"], ["update", "Modifier"], ["delete", "Supprimer"]];
-  const rolePresets = {
-    promoter: { elevages:{read:true,create:true,update:true,delete:true}, suivi:{read:true,create:true,update:true,delete:true}, sales:{read:true,create:true,update:true,delete:true}, finances:{read:true,create:true,update:true,delete:true}, stocks:{read:true,create:true,update:true,delete:true}, equipe:{read:true,create:true,update:true,delete:true}, historique:{read:true} },
-    manager: { elevages:{read:true,create:true,update:true,delete:false}, suivi:{read:true,create:true,update:true,delete:false}, sales:{read:true,create:true,update:true,delete:false}, finances:{read:true,create:true,update:true,delete:false}, stocks:{read:true,create:true,update:true,delete:false}, equipe:{read:true,create:false,update:false,delete:false}, historique:{read:true} },
-    technician: { elevages:{read:true,create:false,update:false,delete:false}, suivi:{read:true,create:true,update:true,delete:false}, sales:{read:false,create:false,update:false,delete:false}, finances:{read:false,create:false,update:false,delete:false}, stocks:{read:true,create:false,update:false,delete:false}, equipe:{read:false,create:false,update:false,delete:false}, historique:{read:false} },
-    employee: { elevages:{read:true,create:false,update:false,delete:false}, suivi:{read:true,create:true,update:false,delete:false}, sales:{read:false,create:false,update:false,delete:false}, finances:{read:false,create:false,update:false,delete:false}, stocks:{read:true,create:false,update:false,delete:false}, equipe:{read:false,create:false,update:false,delete:false}, historique:{read:false} },
-    viewer: { elevages:{read:true}, suivi:{read:true}, sales:{read:true}, finances:{read:true}, stocks:{read:true}, equipe:{read:true}, historique:{read:true} },
-    consultant: { elevages:{read:true}, suivi:{read:true}, sales:{read:false}, finances:{read:false}, stocks:{read:false}, equipe:{read:false}, historique:{read:true} }
-  };
-  function permissionsForRole(role) { return JSON.parse(JSON.stringify(rolePresets[role] || rolePresets.employee)); }
   async function saveMember(e) {
     e.preventDefault(); setBusy(true); setError("");
     const permissions = form.permissions || permissionsForRole(form.role || "employee");
     const existingMember = form.member_id ? members.find(m => m.id === form.member_id) : null;
     const memberIsActive = form.member_id ? form.is_active !== false : true;
-    const memberStatus = !memberIsActive
-      ? "inactive"
-      : form.status === "inactive"
-        ? (existingMember?.user_id ? "active" : "pending")
-        : (form.status || "pending");
+    const memberStatus = resolveMemberStatus({
+      isActive: memberIsActive,
+      currentStatus: form.status,
+      userId: existingMember?.user_id
+    });
     const payload = { farm_id: activeFarm.id, email: form.email.trim().toLowerCase(), full_name: form.full_name?.trim() || null, role: form.role || "employee", permissions, status: "pending", is_active: true };
     const request = form.member_id
       ? supabase.from("farm_members").update({ full_name: payload.full_name, role: payload.role, permissions: payload.permissions, is_active: memberIsActive, status: memberStatus, updated_at: new Date().toISOString() }).eq("id", form.member_id)
