@@ -562,7 +562,7 @@ export default function App() {
   }
 
   async function loadAdminOverview() {
-    if (!session?.user?.id || (session.user.email || "").toLowerCase() !== "valery.yacinthe@gmail.com") return;
+    if (!session?.user?.id || (session.user.email || "").toLowerCase() !== "valeryyacinthe@gmail.com") return;
     setAdminOverviewBusy(true); setAdminOverviewError("");
     const { data, error } = await supabase.rpc("gestfarm_global_admin_overview");
     if (error) setAdminOverviewError("Impossible de charger les statistiques générales : " + error.message);
@@ -1646,7 +1646,7 @@ export default function App() {
   const farmGroupIds = farmGroups.map(g=>g.id);
   const farmRabbitBreeders = rabbitBreeders.filter(b=>farmGroupIds.includes(b.group_id));
   const farmPigBreeders = pigBreeders.filter(b=>farmGroupIds.includes(b.group_id));
-  const isGlobalAdmin = (session?.user?.email || "").toLowerCase() === "valery.yacinthe@gmail.com";
+  const isGlobalAdmin = (session?.user?.email || "").toLowerCase() === "valeryyacinthe@gmail.com";
   const farmSales = sales.filter(x => x.farm_id === activeFarm?.id);
   const farmOffspring = offspringBatches.filter(x => x.farm_id === activeFarm?.id);
   const farmTransfers = stockTransfers.filter(x => x.farm_id === activeFarm?.id);
