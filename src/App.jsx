@@ -1568,6 +1568,8 @@ export default function App() {
   const canUpdateFinance = isFarmOwner || !!currentFarmMember?.permissions?.finances?.update;
   const canCreateStocks = isFarmOwner || !!currentFarmMember?.permissions?.stocks?.create;
   const canUpdateStocks = isFarmOwner || !!currentFarmMember?.permissions?.stocks?.update;
+  const canCreateTeam = isFarmOwner || !!currentFarmMember?.permissions?.equipe?.create;
+  const canUpdateTeam = isFarmOwner || !!currentFarmMember?.permissions?.equipe?.update;
   const canConsumeAllocatedStock = isFarmOwner || !!currentFarmMember?.permissions?.stocks?.create || !!currentFarmMember?.permissions?.suivi?.create;
   const moduleForPage = { farms:"elevages", technical:"suivi", breeders:"suivi", rabbits:"suivi", pigs:"suivi", finance:"finances", sales:"sales", stocks:"stocks", team:"equipe", tasks:"equipe", activity:"historique" };
   const visibleNav = nav.filter(([id]) => {
@@ -1922,8 +1924,8 @@ export default function App() {
       </div>
     </>;
     if (page === "tasks") return <>
-      <SectionTitle title="Tâches et absences" subtitle="Organise les tâches et consulte les absences enregistrées." action={<div style={{display:"flex",gap:8,flexWrap:"wrap"}}><Button secondary onClick={()=>openModal("absence",{start_date:today()})} disabled={!farmMembers.length}><Plus size={15}/> Déclarer une absence</Button><Button onClick={()=>openModal("task")}><Plus size={15}/> Nouvelle tâche</Button></div>}/>
-      <div style={styles.twoCols}><div style={styles.panel}><h3 style={styles.panelTitle}>Tâches</h3>{farmTasks.length?farmTasks.map(t=><div key={t.id} style={styles.listRow}><div><b>{t.title}</b><div style={styles.muted}>{t.description||"Sans description"}</div></div><select value={t.status||"pending"} onChange={e=>updateTask(t,e.target.value)} style={{...inputStyle,width:130}}><option value="pending">En attente</option><option value="in_progress">En cours</option><option value="completed">Terminée</option><option value="cancelled">Annulée</option></select></div>):<Empty text="Aucune tâche enregistrée."/>}</div>
+      <SectionTitle title="Tâches et absences" subtitle="Organise les tâches et consulte les absences enregistrées." action={<div style={{display:"flex",gap:8,flexWrap:"wrap"}}><Button secondary onClick={()=>openModal("absence",{start_date:today()})} disabled={!farmMembers.length || !canCreateTeam}><Plus size={15}/> Déclarer une absence</Button><Button onClick={()=>openModal("task")} disabled={!canCreateTeam}><Plus size={15}/> Nouvelle tâche</Button></div>}/>
+      <div style={styles.twoCols}><div style={styles.panel}><h3 style={styles.panelTitle}>Tâches</h3>{farmTasks.length?farmTasks.map(t=><div key={t.id} style={styles.listRow}><div><b>{t.title}</b><div style={styles.muted}>{t.description||"Sans description"}</div></div><select value={t.status||"pending"} onChange={e=>updateTask(t,e.target.value)} disabled={!canUpdateTeam} style={{...inputStyle,width:130}}><option value="pending">En attente</option><option value="in_progress">En cours</option><option value="completed">Terminée</option><option value="cancelled">Annulée</option></select></div>):<Empty text="Aucune tâche enregistrée."/>}</div>
       <div style={styles.panel}><h3 style={styles.panelTitle}>Absences</h3>{farmAbsences.length?farmAbsences.map(a=><div key={a.id} style={styles.listRow}><div><b>{farmMembers.find(m=>m.id===a.member_id)?.full_name||farmMembers.find(m=>m.id===a.member_id)?.email||"Membre"}</b><div style={styles.muted}>{a.reason||"Motif non précisé"}</div></div><span style={styles.muted}>{dateLabel(a.start_date)} – {dateLabel(a.end_date)}</span></div>):<Empty text="Aucune absence enregistrée."/>}</div></div>
     </>;
     if (page === "suggestions" || page === "adminSuggestions") return <>
