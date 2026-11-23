@@ -5,6 +5,7 @@ import {
   AlertCircle, CheckCircle2, Trash2, CalendarDays, Activity, MessageSquare, MailCheck, Settings
 } from "lucide-react";
 import { supabase } from "./supabase";
+import { stockEquivalent } from "./utils/stock";
 
 // Stockage local hors connexion (IndexedDB) : isolé par compte utilisateur.
 const GESTFARM_DB = "gestfarm-offline-v1";
@@ -82,14 +83,6 @@ const today = () => new Date().toISOString().slice(0, 10);
 const money = (n) => `${Number(n || 0).toLocaleString("fr-FR")} FCFA`;
 const dateLabel = (d) => d ? new Date(`${d}T00:00:00`).toLocaleDateString("fr-FR") : "—";
 const addDaysToDate = (date, days) => { if (!date) return ""; const d = new Date(`${date}T00:00:00Z`); d.setUTCDate(d.getUTCDate() + days); return d.toISOString().slice(0, 10); };
-const stockEquivalent = (quantity, unit) => {
-  const value = Number(quantity || 0);
-  if (unit === "kg" && value >= 1000) return `≈ ${(value / 1000).toLocaleString("fr-FR", { maximumFractionDigits: 3 })} tonne(s)`;
-  if (unit === "tonne") return `≈ ${(value * 1000).toLocaleString("fr-FR", { maximumFractionDigits: 3 })} kg`;
-  if (unit === "g" && value >= 1000) return `≈ ${(value / 1000).toLocaleString("fr-FR", { maximumFractionDigits: 3 })} kg`;
-  if (unit === "ml" && value >= 1000) return `≈ ${(value / 1000).toLocaleString("fr-FR", { maximumFractionDigits: 3 })} L`;
-  return "";
-};
 const speciesNames = { broilers: "Poulets de chair", layers: "Poules pondeuses", rabbits: "Lapins", pigs: "Porcs" };
 const stockUnits = ["kg", "g", "sac", "tonne", "L", "unité", "pièce", "boîte", "flacon", "bidon", "carton", "rouleau", "ml", "autre"];
 const stockUnitLabels = { kg:"Kilogramme (kg)", g:"Gramme (g)", sac:"Sac", tonne:"Tonne (t)", L:"Litre (L)", unité:"Unité", pièce:"Pièce", boîte:"Boîte", flacon:"Flacon", bidon:"Bidon", carton:"Carton", rouleau:"Rouleau", ml:"Millilitre (ml)", autre:"Autre" };
