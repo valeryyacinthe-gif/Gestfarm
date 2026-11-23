@@ -893,6 +893,25 @@ export default function App() {
     } catch(err) { setError(err.message||"Enregistrement impossible."); }
     setBusy(false);
   }
+  async function saveFarm(e) {
+    e.preventDefault(); if(!session?.user)return;
+    setBusy(true);setError("");setNotice("");
+    try {
+      const region=CAMEROON_REGIONS.find(x=>x.id===form.region_code);
+      const department=CAMEROON_DEPARTMENTS.find(x=>x.id===form.department_code);
+      const arrondissement=CAMEROON_ARRONDISSEMENTS.find(x=>x.id===form.arrondissement_code);
+      if(!form.name?.trim())throw new Error("Donne un nom à cette exploitation.");
+      if(!region||!department||!arrondissement||department.region_id!==region.id||arrondissement.department_id!==department.id)throw new Error("Sélectionne correctement la région, le département et l’arrondissement.");
+      const locality=form.locality?.trim();if(!locality)throw new Error("Indique la ville, le village ou la localité de l’exploitation.");
+      const row={id:makeLocalId(),owner_id:session.user.id,name:form.name.trim(),location:[locality,arrondissement.name,department.name,region.name,"Cameroun"].join(", "),country_code:"CM",country_name:"Cameroun",region_code:region.id,region:region.name,department_code:department.id,department:department.name,arrondissement_code:arrondissement.id,arrondissement:arrondissement.name,locality,research_consent:form.research_consent===true,research_consent_at:form.research_consent===true?new Date().toISOString():null};
+      const result=await saveOfflineCapableRow("farms",row);
+      if(result.queued){setFarms(old=>[...old.filter(x=>x.id!==row.id),{...row,sync_pending:true}]);await refreshPendingCount(session.user.id);setNotice("Exploitation enregistrée sur cet appareil. Elle sera synchronisée au retour d’Internet.");}
+      else{await loadAll();setNotice("Exploitation créée. Tu peux maintenant ajouter tes élevages.");}
+      setSelectedFarm(row.id);setModal("");setPage("farms");
+    }catch(err){setError(err.message||"Impossible de créer cette exploitation.");}
+    finally{setBusy(false);}
+  }
+
   async function saveGroup(e) {
     e.preventDefault();
     const name = form.name?.trim();
@@ -1871,10 +1890,15 @@ export default function App() {
       </div>
     </>;
     if (page === "farms") return <>
-      <SectionTitle title="Mes élevages" subtitle="Chaque fiche représente un élevage distinct, avec son espèce, son effectif et ses responsables." action={canCreateElevages?<Button onClick={() => openModal("group", { species: "broilers", date: today(), count: "" })}><Plus size={16}/> Ajouter un élevage</Button>:null}/>
-      {farms.length > 1 && <div style={{...styles.panel,marginBottom:14}}><Field label="Exploitation à consulter"><select style={inputStyle} value={activeFarm?.id||""} onChange={e=>setSelectedFarm(e.target.value)}>{farms.map(f=><option key={f.id} value={f.id}>{f.name} — {f.owner_id === session.user.id ? "Mon exploitation" : "Espace invité"}</option>)}</select></Field></div>}
-      {activeFarm && <div style={{fontSize:12,color:"#718077",marginBottom:14}}>Exploitation : <b style={{color:GREEN}}>{activeFarm.name}</b>{activeFarm.location?` · ${activeFarm.location}`:""}</div>}
-      {!activeFarm ? <div style={styles.panel}><Empty text="Bienvenue ! Ajoute ton premier élevage. GESTFARM créera automatiquement ton espace d’exploitation : tu n’as pas besoin de créer un compte employé si tu travailles seul."/><div style={{display:"flex",justifyContent:"center",paddingBottom:18}}>{canCreateElevages&&<Button onClick={()=>openModal("group",{species:"broilers",date:today(),count:""})}><Plus size={16}/> Créer ma première fiche d’élevage</Button>}</div></div> : <>
+      <SectionTitle title="Mes exploitations" subtitle="Crée ou sélectionne d’abord le site sur lequel tu souhaites travailler." action={<Button onClick={()=>openModal("farmCreate",{name:"",research_consent:false})}><Plus size={16}/> Ajouter une exploitation</Button>}/>
+      <div style={{...styles.panel,marginBottom:16,border:"1px solid #dce8df"}}>
+        {farms.length>0 ? <><Field label="Exploitation / site actif"><select style={inputStyle} value={activeFarm?.id||""} onChange={e=>setSelectedFarm(e.target.value)}>{farms.map(f=><option key={f.id} value={f.id}>{f.name} — {f.owner_id===session.user.id?"Mon exploitation":"Espace invité"}</option>)}</select></Field>
+          {activeFarm&&<div style={{fontSize:12,color:"#718077",marginTop:8}}>{activeFarm.location||"Localisation non précisée"}</div>}
+          {activeFarm?.owner_id===session.user.id&&<div style={{display:"flex",gap:8,flexWrap:"wrap",marginTop:12}}><Button secondary onClick={()=>openModal("farmEdit",{name:activeFarm.name,location:activeFarm.location||"",region_code:activeFarm.region_code||"",department_code:activeFarm.department_code||"",arrondissement_code:activeFarm.arrondissement_code||"",locality:activeFarm.locality||"",research_consent:activeFarm.research_consent===true})}>Modifier l’exploitation</Button><Button secondary onClick={()=>openModal("farmCreate",{name:"",research_consent:false})}><Plus size={14}/> Ajouter un autre site</Button></div>}
+        </> : <><b style={{color:GREEN}}>Étape 1 — Enregistrer mon exploitation</b><p style={styles.muted}>Aucune exploitation n’est encore enregistrée. Commence par créer ton exploitation ; tu pourras ensuite y rattacher tes élevages.</p><Button onClick={()=>openModal("farmCreate",{name:"",research_consent:false})}><Plus size={16}/> Créer mon exploitation</Button></>}
+      </div>
+      <SectionTitle title="Mes élevages" subtitle={activeFarm?`Élevages rattachés à : ${activeFarm.name}`:"Sélectionne ou crée une exploitation pour commencer."} action={activeFarm&&canCreateElevages?<Button onClick={() => openModal("group", { species: "broilers", date: today(), count: "" })}><Plus size={16}/> Ajouter un élevage</Button>:null}/>
+      {!activeFarm ? <div style={styles.panel}><Empty text="Après l’enregistrement de ton exploitation, tes élevages apparaîtront ici."/></div> : <>
         {farmGroups.length ? <div style={styles.cardsGrid}>{farmGroups.map(g=>{
           const cycle=farmCycles.find(c=>c.id===g.cycle_id);
           const assigned=groupAssignments.filter(a=>a.group_id===g.id).map(a=>farmMembers.find(m=>m.id===a.member_id)).filter(Boolean);
@@ -2113,6 +2137,16 @@ export default function App() {
 
   const modalContent = (() => {
     const farmSelect = <Field label="Fiche d’élevage concernée"><select style={inputStyle} value={form.cycle_id||""} onChange={e=>{set("cycle_id",e.target.value);set("group_id",farmGroups.find(g=>g.cycle_id===e.target.value)?.id||"");}} required><option value="">Choisir un élevage</option>{farmCycles.filter(c=>c.status==="active").map(c=><option key={c.id} value={c.id}>{speciesNames[c.species]||c.species} — {c.name}</option>)}</select></Field>;
+    if (modal==="farmCreate") return modalForm("Créer une exploitation",saveFarm,<div style={{display:"grid",gap:12}}>
+      <p style={{fontSize:13,color:"#65736a",margin:0}}>Commence par enregistrer ton exploitation et sa localisation. Tu pourras ensuite y ajouter un ou plusieurs élevages.</p>
+      <Field label="Nom de l’exploitation"><input style={inputStyle} value={form.name||""} onChange={e=>set("name",e.target.value)} required placeholder="Ex. Ferme familiale de Dschang"/></Field>
+      <Field label="Pays"><select style={inputStyle} value="CM" disabled><option value="CM">Cameroun</option></select></Field>
+      <Field label="Région"><select style={inputStyle} value={form.region_code||""} onChange={e=>{set("region_code",e.target.value);set("department_code","");set("arrondissement_code","");}} required><option value="">Choisir une région</option>{CAMEROON_REGIONS.map(x=><option key={x.id} value={x.id}>{x.name}</option>)}</select></Field>
+      <Field label="Département"><select style={inputStyle} value={form.department_code||""} onChange={e=>{set("department_code",e.target.value);set("arrondissement_code","");}} required disabled={!form.region_code}><option value="">Choisir un département</option>{CAMEROON_DEPARTMENTS.filter(x=>x.region_id===form.region_code).map(x=><option key={x.id} value={x.id}>{x.name}</option>)}</select></Field>
+      <Field label="Arrondissement"><select style={inputStyle} value={form.arrondissement_code||""} onChange={e=>set("arrondissement_code",e.target.value)} required disabled={!form.department_code}><option value="">Choisir un arrondissement</option>{CAMEROON_ARRONDISSEMENTS.filter(x=>x.department_id===form.department_code).map(x=><option key={x.id} value={x.id}>{x.name}</option>)}</select></Field>
+      <Field label="Ville / village / localité"><input style={inputStyle} value={form.locality||""} onChange={e=>set("locality",e.target.value)} placeholder="Ex. Dschang, Fongo-Tongo, quartier…" required/></Field>
+      <label style={{display:"flex",gap:9,alignItems:"flex-start",fontSize:12,lineHeight:1.5,color:"#536258"}}><input type="checkbox" checked={!!form.research_consent} onChange={e=>set("research_consent",e.target.checked)} style={{marginTop:3}}/><span>J’accepte que la localisation de cette exploitation soit utilisée sous forme agrégée et anonymisée pour les statistiques de GESTFARM et les travaux de recherche annoncés. Cet accord est facultatif.</span></label>
+    </div>);
     if (modal==="farmEdit") return modalForm("Modifier l’exploitation",async e=>{
       e.preventDefault();setBusy(true);
       const region=CAMEROON_REGIONS.find(x=>x.id===form.region_code);
