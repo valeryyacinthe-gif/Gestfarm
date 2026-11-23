@@ -219,6 +219,7 @@ export default function App() {
   const [pigBreeders, setPigBreeders] = useState([]);
   const [pigEvents, setPigEvents] = useState([]);
   const [selectedFarm, setSelectedFarm] = useState("");
+  const [workspacePickerOpen, setWorkspacePickerOpen] = useState(false);
   const [modal, setModal] = useState("");
   const [form, setForm] = useState({});
   const [filter, setFilter] = useState("");
@@ -314,7 +315,8 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (!session?.user?.id) { setWorkspaceChoiceOpen(false); return; }
+    if (!session?.user?.id) { setWorkspaceChoiceOpen(false); setWorkspacePickerOpen(false); return; }
+    if (workspacePickerOpen) { setWorkspaceChoiceOpen(false); return; }
     const user = session.user;
     const active = farms.find((farm) => farm.id === (selectedFarm || farms[0]?.id));
     // Un espace appartenant à un autre promoteur utilise son interface entreprise.
@@ -334,7 +336,16 @@ export default function App() {
       setWorkspaceMode("enterprise");
       setWorkspaceChoiceOpen(true);
     }
-  }, [session?.user?.id, session?.user?.user_metadata?.gestfarm_workspace_mode, session?.user?.user_metadata?.gestfarm_workspace_modes, farms, selectedFarm]);
+  }, [session?.user?.id, session?.user?.user_metadata?.gestfarm_workspace_mode, session?.user?.user_metadata?.gestfarm_workspace_modes, farms, selectedFarm, workspacePickerOpen]);
+  useEffect(() => {
+    if (!session?.user?.id || !farms.length) return;
+    const personal = farms.filter(f => f.owner_id === session.user.id);
+    const invited = farms.filter(f => f.owner_id !== session.user.id);
+    if (personal.length && invited.length) {
+      setWorkspacePickerOpen(true);
+      setWorkspaceChoiceOpen(false);
+    }
+  }, [session?.user?.id, farms.length]);
   useEffect(() => { if (session?.user) loadAll(); }, [session?.user?.id]);
   useEffect(() => { if (session?.user?.id && (page === "suggestions" || page === "adminSuggestions")) loadSuggestions(); }, [session?.user?.id, page]);
   useEffect(() => {
@@ -2163,10 +2174,31 @@ export default function App() {
     <main className="gf-main" style={styles.main}>
       <header className="gf-main-header" style={styles.header}>
         <button className="gf-mobile-menu" aria-label="Ouvrir le menu" onClick={()=>setMobileOpen(!mobileOpen)} style={{...styles.iconButton,display:"inline-flex"}}><Menu size={20}/></button>
-        <div style={{ flex:1 }}><b style={{ color:GREEN }}>Espace de gestion</b><div style={styles.muted}>{session.user.email}</div></div>
-        <select aria-label="Élevage actif" value={activeFarm?.id||""} onChange={e=>setSelectedFarm(e.target.value)} style={{...inputStyle,width:"auto",maxWidth:190}}><option value="">Tous les élevages</option>{farms.map(f=><option key={f.id} value={f.id}>{f.name}</option>)}</select>
+        <div style={{ flex:1 }}><b style={{ color:GREEN }}>{activeFarm?.owner_id === session.user.id ? "Mon espace personnel" : "Espace professionnel"}</b><div style={styles.muted}>{activeFarm?.name || session.user.email}</div></div>
+        <button type="button" onClick={()=>{setWorkspacePickerOpen(true);setWorkspaceChoiceOpen(false);}} style={{...styles.iconButton,padding:"8px 10px",fontSize:12,fontWeight:700,whiteSpace:"nowrap"}}>Changer d’espace</button>
       </header>
       <div className="gf-content" style={styles.content}>
+        {workspacePickerOpen && <div style={styles.overlay}>
+          <section role="dialog" aria-modal="true" aria-labelledby="workspace-picker-title" className="gf-modal" style={{...styles.modal,width:"min(100%,680px)"}}>
+            <div style={{textAlign:"center",marginBottom:18}}>
+              <h2 id="workspace-picker-title" style={{color:GREEN,margin:"0 0 8px"}}>Où souhaitez-vous travailler ?</h2>
+              <p style={{fontSize:14,lineHeight:1.6,color:"#5c6b61",margin:0}}>Choisis ton espace de travail. Tes données personnelles et celles des entreprises restent séparées.</p>
+            </div>
+            <div style={{display:"grid",gap:12}}>
+              <div style={{border:"1px solid #dce8df",borderRadius:13,padding:14}}>
+                <h3 style={{color:GREEN,margin:"0 0 10px"}}>👤 Mon espace personnel</h3>
+                {farms.filter(f=>f.owner_id===session.user.id).map(f=><button key={f.id} type="button" onClick={()=>{setSelectedFarm(f.id);setWorkspacePickerOpen(false);}} style={{...styles.navItem,width:"100%",justifyContent:"space-between",border:"1px solid #dce8df",borderRadius:9,marginTop:6,padding:12}}><span>{f.name}</span><span>Ouvrir →</span></button>)}
+                {!farms.some(f=>f.owner_id===session.user.id)&&<p style={styles.muted}>Aucune exploitation personnelle créée pour le moment.</p>}
+              </div>
+              <div style={{border:"1px solid #dce8df",borderRadius:13,padding:14}}>
+                <h3 style={{color:"#245f9e",margin:"0 0 10px"}}>🏢 Mes espaces professionnels (entreprises qui m’emploient)</h3>
+                {farms.filter(f=>f.owner_id!==session.user.id).map(f=><button key={f.id} type="button" onClick={()=>{setSelectedFarm(f.id);setWorkspacePickerOpen(false);}} style={{...styles.navItem,width:"100%",justifyContent:"space-between",border:"1px solid #dce8df",borderRadius:9,marginTop:6,padding:12}}><span>{f.name}</span><span>Accéder →</span></button>)}
+                {!farms.some(f=>f.owner_id!==session.user.id)&&<p style={styles.muted}>Aucun espace professionnel partagé avec toi pour le moment.</p>}
+              </div>
+            </div>
+            <p style={{fontSize:11,color:"#7b887f",lineHeight:1.5,margin:"14px 0 0"}}>Tu peux changer d’espace à tout moment avec le bouton « Changer d’espace ». Les autorisations sont définies par chaque promoteur.</p>
+          </section>
+        </div>}
         {workspaceChoiceOpen && <div style={styles.overlay}>
           <section role="dialog" aria-modal="true" aria-labelledby="workspace-choice-title" className="gf-modal" style={{...styles.modal,width:"min(100%,680px)"}}>
             <div style={{textAlign:"center",marginBottom:18}}>
