@@ -1,0 +1,2499 @@
+{
+  "attribution": "Open Admin Data — Cameroon Administrative Divisions, CC-BY-4.0. Source: https://github.com/open-admin-data/cameroon-administrative-divisions. Administrative structure cross-checked against Cameroon INS nomenclature.",
+  "regions": [
+    {
+      "id": "CM001",
+      "name": "Adamaoua"
+    },
+    {
+      "id": "CM002",
+      "name": "Centre"
+    },
+    {
+      "id": "CM003",
+      "name": "Est"
+    },
+    {
+      "id": "CM004",
+      "name": "Extrême-Nord"
+    },
+    {
+      "id": "CM005",
+      "name": "Littoral"
+    },
+    {
+      "id": "CM006",
+      "name": "Nord"
+    },
+    {
+      "id": "CM007",
+      "name": "Nord-Ouest"
+    },
+    {
+      "id": "CM009",
+      "name": "Sud"
+    },
+    {
+      "id": "CM010",
+      "name": "Sud-Ouest"
+    },
+    {
+      "id": "CM008",
+      "name": "Ouest"
+    }
+  ],
+  "departments": [
+    {
+      "id": "CM001001",
+      "name": "Djérem",
+      "region_id": "CM001"
+    },
+    {
+      "id": "CM001002",
+      "name": "Faro-et-Déo",
+      "region_id": "CM001"
+    },
+    {
+      "id": "CM001003",
+      "name": "Mayo-Banyo",
+      "region_id": "CM001"
+    },
+    {
+      "id": "CM001004",
+      "name": "Mbéré",
+      "region_id": "CM001"
+    },
+    {
+      "id": "CM001005",
+      "name": "Vina",
+      "region_id": "CM001"
+    },
+    {
+      "id": "CM002001",
+      "name": "Haute-Sanaga",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002002",
+      "name": "Lekié",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002003",
+      "name": "Mbam-et-Inoubou",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002004",
+      "name": "Mbam-et-Kim",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002005",
+      "name": "Mefou-et-Afamba",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002006",
+      "name": "Mefou-et-Akono",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002007",
+      "name": "Mfoundi",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002008",
+      "name": "Nyong-et-Kellé",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002009",
+      "name": "Nyong-et-Mfoumou",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002010",
+      "name": "Nyong-et-So'o",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM003001",
+      "name": "Boumba-et-Ngoko",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003002",
+      "name": "Haut-Nyong",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003003",
+      "name": "Kadey",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003004",
+      "name": "Lom-et-Djérem",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM004001",
+      "name": "Diamaré",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004002",
+      "name": "Logone-et-Chari",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004003",
+      "name": "Mayo-Danay",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004004",
+      "name": "Mayo-Kani",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004005",
+      "name": "Mayo-Sava",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004006",
+      "name": "Mayo-Tsanaga",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM005001",
+      "name": "Moungo",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005002",
+      "name": "Nkam",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005003",
+      "name": "Sanaga-Maritime",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005004",
+      "name": "Wouri",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM006001",
+      "name": "Bénoué",
+      "region_id": "CM006"
+    },
+    {
+      "id": "CM006002",
+      "name": "Faro",
+      "region_id": "CM006"
+    },
+    {
+      "id": "CM006003",
+      "name": "Mayo-Louti",
+      "region_id": "CM006"
+    },
+    {
+      "id": "CM006004",
+      "name": "Mayo-Rey",
+      "region_id": "CM006"
+    },
+    {
+      "id": "CM007001",
+      "name": "Boyo",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007002",
+      "name": "Bui",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007003",
+      "name": "Donga-Mantung",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007004",
+      "name": "Menchum",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007005",
+      "name": "Mezam",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007006",
+      "name": "Momo",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007007",
+      "name": "Ngo-Ketunjia",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM009001",
+      "name": "Dja-et-Lobo",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM009002",
+      "name": "Mvila",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM009003",
+      "name": "Océan",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM009004",
+      "name": "Vallée-du-Ntem",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM010001",
+      "name": "Fako",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010002",
+      "name": "Kupe-Manenguba",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010003",
+      "name": "Lebialem",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010004",
+      "name": "Manyu",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010005",
+      "name": "Meme",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010006",
+      "name": "Ndian",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM008001",
+      "name": "Bamboutos",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008002",
+      "name": "Haut-Nkam",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008003",
+      "name": "Hauts-Plateaux",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008004",
+      "name": "Koung-Khi",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008005",
+      "name": "Menoua",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008006",
+      "name": "Mifi",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008007",
+      "name": "Ndé",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008008",
+      "name": "Noun",
+      "region_id": "CM008"
+    }
+  ],
+  "arrondissements": [
+    {
+      "id": "CM001001001",
+      "name": "Ngaoundal",
+      "department_id": "CM001001",
+      "region_id": "CM001"
+    },
+    {
+      "id": "CM001001002",
+      "name": "Tibati",
+      "department_id": "CM001001",
+      "region_id": "CM001"
+    },
+    {
+      "id": "CM001002001",
+      "name": "Galim-Tignere",
+      "department_id": "CM001002",
+      "region_id": "CM001"
+    },
+    {
+      "id": "CM001002002",
+      "name": "Kontcha",
+      "department_id": "CM001002",
+      "region_id": "CM001"
+    },
+    {
+      "id": "CM001002003",
+      "name": "Mayo-Baleo",
+      "department_id": "CM001002",
+      "region_id": "CM001"
+    },
+    {
+      "id": "CM001002004",
+      "name": "Tignere",
+      "department_id": "CM001002",
+      "region_id": "CM001"
+    },
+    {
+      "id": "CM001003001",
+      "name": "Bankim",
+      "department_id": "CM001003",
+      "region_id": "CM001"
+    },
+    {
+      "id": "CM001003002",
+      "name": "Banyo",
+      "department_id": "CM001003",
+      "region_id": "CM001"
+    },
+    {
+      "id": "CM001003003",
+      "name": "Mayo-Darle",
+      "department_id": "CM001003",
+      "region_id": "CM001"
+    },
+    {
+      "id": "CM001004001",
+      "name": "Dir",
+      "department_id": "CM001004",
+      "region_id": "CM001"
+    },
+    {
+      "id": "CM001004002",
+      "name": "Djohong",
+      "department_id": "CM001004",
+      "region_id": "CM001"
+    },
+    {
+      "id": "CM001004003",
+      "name": "Meiganga",
+      "department_id": "CM001004",
+      "region_id": "CM001"
+    },
+    {
+      "id": "CM001004004",
+      "name": "Ngaoui",
+      "department_id": "CM001004",
+      "region_id": "CM001"
+    },
+    {
+      "id": "CM001005001",
+      "name": "Belel",
+      "department_id": "CM001005",
+      "region_id": "CM001"
+    },
+    {
+      "id": "CM001005002",
+      "name": "Martap",
+      "department_id": "CM001005",
+      "region_id": "CM001"
+    },
+    {
+      "id": "CM001005003",
+      "name": "Mbe",
+      "department_id": "CM001005",
+      "region_id": "CM001"
+    },
+    {
+      "id": "CM001005004",
+      "name": "Nganha",
+      "department_id": "CM001005",
+      "region_id": "CM001"
+    },
+    {
+      "id": "CM001005005",
+      "name": "Ngaoundere 1er",
+      "department_id": "CM001005",
+      "region_id": "CM001"
+    },
+    {
+      "id": "CM001005006",
+      "name": "Ngaoundere 2e",
+      "department_id": "CM001005",
+      "region_id": "CM001"
+    },
+    {
+      "id": "CM001005007",
+      "name": "Ngaoundere 3e",
+      "department_id": "CM001005",
+      "region_id": "CM001"
+    },
+    {
+      "id": "CM001005008",
+      "name": "Nyambaka",
+      "department_id": "CM001005",
+      "region_id": "CM001"
+    },
+    {
+      "id": "CM002001001",
+      "name": "Bibey",
+      "department_id": "CM002001",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002001002",
+      "name": "Lembe Yezoum",
+      "department_id": "CM002001",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002001003",
+      "name": "Mbandjock",
+      "department_id": "CM002001",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002001004",
+      "name": "Minta",
+      "department_id": "CM002001",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002001005",
+      "name": "Nanga-Eboko",
+      "department_id": "CM002001",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002001006",
+      "name": "Nkoteng",
+      "department_id": "CM002001",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002001007",
+      "name": "Nsem",
+      "department_id": "CM002001",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002002001",
+      "name": "Batchenga",
+      "department_id": "CM002002",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002002002",
+      "name": "Ebebda",
+      "department_id": "CM002002",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002002003",
+      "name": "Elig-Mfomo",
+      "department_id": "CM002002",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002002004",
+      "name": "Evodoula",
+      "department_id": "CM002002",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002002005",
+      "name": "Lobo",
+      "department_id": "CM002002",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002002006",
+      "name": "Monatele",
+      "department_id": "CM002002",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002002007",
+      "name": "Obala",
+      "department_id": "CM002002",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002002008",
+      "name": "Okola",
+      "department_id": "CM002002",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002002009",
+      "name": "Saa",
+      "department_id": "CM002002",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002003001",
+      "name": "Bafia",
+      "department_id": "CM002003",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002003002",
+      "name": "Bokito",
+      "department_id": "CM002003",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002003003",
+      "name": "Deuk",
+      "department_id": "CM002003",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002003004",
+      "name": "Kiiki",
+      "department_id": "CM002003",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002003005",
+      "name": "Kon Yambetta",
+      "department_id": "CM002003",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002003006",
+      "name": "Makenene",
+      "department_id": "CM002003",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002003007",
+      "name": "Ndikinimeki",
+      "department_id": "CM002003",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002003008",
+      "name": "Nitoukou",
+      "department_id": "CM002003",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002003009",
+      "name": "Ombessa",
+      "department_id": "CM002003",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002004001",
+      "name": "Mbangassina",
+      "department_id": "CM002004",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002004002",
+      "name": "Ngambe-Tikar",
+      "department_id": "CM002004",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002004003",
+      "name": "Ngoro",
+      "department_id": "CM002004",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002004004",
+      "name": "Ntui",
+      "department_id": "CM002004",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002004005",
+      "name": "Yoko",
+      "department_id": "CM002004",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002005001",
+      "name": "Afanloum",
+      "department_id": "CM002005",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002005002",
+      "name": "Assamba",
+      "department_id": "CM002005",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002005003",
+      "name": "Awae",
+      "department_id": "CM002005",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002005004",
+      "name": "Edzendouan",
+      "department_id": "CM002005",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002005005",
+      "name": "Esse",
+      "department_id": "CM002005",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002005006",
+      "name": "Mfou",
+      "department_id": "CM002005",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002005007",
+      "name": "Nkolafamba",
+      "department_id": "CM002005",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002005008",
+      "name": "Soa",
+      "department_id": "CM002005",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002006001",
+      "name": "Akono",
+      "department_id": "CM002006",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002006002",
+      "name": "Bikok",
+      "department_id": "CM002006",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002006003",
+      "name": "Mbankomo",
+      "department_id": "CM002006",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002006004",
+      "name": "Ngoumou",
+      "department_id": "CM002006",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002007001",
+      "name": "Yaounde 1er",
+      "department_id": "CM002007",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002007002",
+      "name": "Yaounde 2e",
+      "department_id": "CM002007",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002007003",
+      "name": "Yaounde 3e",
+      "department_id": "CM002007",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002007004",
+      "name": "Yaounde 4e",
+      "department_id": "CM002007",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002007005",
+      "name": "Yaounde 5e",
+      "department_id": "CM002007",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002007006",
+      "name": "Yaounde 6e",
+      "department_id": "CM002007",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002007007",
+      "name": "Yaounde 7e",
+      "department_id": "CM002007",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002008001",
+      "name": "Biyouha",
+      "department_id": "CM002008",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002008002",
+      "name": "Bondjock",
+      "department_id": "CM002008",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002008003",
+      "name": "Bot-Makak",
+      "department_id": "CM002008",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002008004",
+      "name": "Dibang",
+      "department_id": "CM002008",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002008005",
+      "name": "Eseka",
+      "department_id": "CM002008",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002008006",
+      "name": "Makak",
+      "department_id": "CM002008",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002008007",
+      "name": "Matomb",
+      "department_id": "CM002008",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002008008",
+      "name": "Messondo",
+      "department_id": "CM002008",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002008009",
+      "name": "Ngog-Mapubi",
+      "department_id": "CM002008",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002008010",
+      "name": "Nguibassal",
+      "department_id": "CM002008",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002009001",
+      "name": "Akonolinga",
+      "department_id": "CM002009",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002009002",
+      "name": "Ayos",
+      "department_id": "CM002009",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002009003",
+      "name": "Endom",
+      "department_id": "CM002009",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002009004",
+      "name": "Mengang",
+      "department_id": "CM002009",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002009005",
+      "name": "Nyakokombo",
+      "department_id": "CM002009",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002010001",
+      "name": "Akoeman",
+      "department_id": "CM002010",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002010002",
+      "name": "Dzeng",
+      "department_id": "CM002010",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002010003",
+      "name": "Mbalmayo",
+      "department_id": "CM002010",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002010004",
+      "name": "Mengueme",
+      "department_id": "CM002010",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002010005",
+      "name": "Ngomedzap",
+      "department_id": "CM002010",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM002010006",
+      "name": "Nkolmetet",
+      "department_id": "CM002010",
+      "region_id": "CM002"
+    },
+    {
+      "id": "CM003001001",
+      "name": "Gari Gombo",
+      "department_id": "CM003001",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003001002",
+      "name": "Moloundou",
+      "department_id": "CM003001",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003001003",
+      "name": "Salapoumbe",
+      "department_id": "CM003001",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003001004",
+      "name": "Yokadouma",
+      "department_id": "CM003001",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003002001",
+      "name": "Abong-Mbang",
+      "department_id": "CM003002",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003002002",
+      "name": "Bebend",
+      "department_id": "CM003002",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003002003",
+      "name": "Dimako",
+      "department_id": "CM003002",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003002004",
+      "name": "Dja",
+      "department_id": "CM003002",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003002005",
+      "name": "Doumaintang",
+      "department_id": "CM003002",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003002006",
+      "name": "Doume",
+      "department_id": "CM003002",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003002007",
+      "name": "Lomie",
+      "department_id": "CM003002",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003002008",
+      "name": "Mboanz",
+      "department_id": "CM003002",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003002009",
+      "name": "Mboma",
+      "department_id": "CM003002",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003002010",
+      "name": "Messamena",
+      "department_id": "CM003002",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003002011",
+      "name": "Messok",
+      "department_id": "CM003002",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003002012",
+      "name": "Ngoyla",
+      "department_id": "CM003002",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003002013",
+      "name": "Nguelemendouka",
+      "department_id": "CM003002",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003002014",
+      "name": "Somalomo",
+      "department_id": "CM003002",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003003001",
+      "name": "Batouri",
+      "department_id": "CM003003",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003003002",
+      "name": "Bombe",
+      "department_id": "CM003003",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003003003",
+      "name": "Kette",
+      "department_id": "CM003003",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003003004",
+      "name": "Mbang",
+      "department_id": "CM003003",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003003005",
+      "name": "Mbotoro",
+      "department_id": "CM003003",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003003006",
+      "name": "Ndelele",
+      "department_id": "CM003003",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003003007",
+      "name": "Ndem Nam",
+      "department_id": "CM003003",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003004001",
+      "name": "Belabo",
+      "department_id": "CM003004",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003004002",
+      "name": "Bertoua 1er",
+      "department_id": "CM003004",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003004003",
+      "name": "Bertoua 2e",
+      "department_id": "CM003004",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003004004",
+      "name": "Betare-Oya",
+      "department_id": "CM003004",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003004005",
+      "name": "Diang",
+      "department_id": "CM003004",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003004006",
+      "name": "Garoua-Boulai",
+      "department_id": "CM003004",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003004007",
+      "name": "Mandjou",
+      "department_id": "CM003004",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM003004008",
+      "name": "Ngoura",
+      "department_id": "CM003004",
+      "region_id": "CM003"
+    },
+    {
+      "id": "CM004001001",
+      "name": "Bogo",
+      "department_id": "CM004001",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004001002",
+      "name": "Dargala",
+      "department_id": "CM004001",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004001003",
+      "name": "Gazawa",
+      "department_id": "CM004001",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004001004",
+      "name": "Maroua 1er",
+      "department_id": "CM004001",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004001005",
+      "name": "Maroua 2e",
+      "department_id": "CM004001",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004001006",
+      "name": "Maroua 3e",
+      "department_id": "CM004001",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004001007",
+      "name": "Meri",
+      "department_id": "CM004001",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004001008",
+      "name": "Ndoukoula",
+      "department_id": "CM004001",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004001009",
+      "name": "Pette",
+      "department_id": "CM004001",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004002001",
+      "name": "Blangoua",
+      "department_id": "CM004002",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004002002",
+      "name": "Darak",
+      "department_id": "CM004002",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004002003",
+      "name": "Fotokol",
+      "department_id": "CM004002",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004002004",
+      "name": "Goulfey",
+      "department_id": "CM004002",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004002005",
+      "name": "Hile-Alifa",
+      "department_id": "CM004002",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004002006",
+      "name": "Kousseri",
+      "department_id": "CM004002",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004002007",
+      "name": "Logone-Birni",
+      "department_id": "CM004002",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004002008",
+      "name": "Makary",
+      "department_id": "CM004002",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004002009",
+      "name": "Waza",
+      "department_id": "CM004002",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004002010",
+      "name": "Zina",
+      "department_id": "CM004002",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004003001",
+      "name": "Datcheka",
+      "department_id": "CM004003",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004003002",
+      "name": "Gobo",
+      "department_id": "CM004003",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004003003",
+      "name": "Guere",
+      "department_id": "CM004003",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004003004",
+      "name": "Kai-Kai",
+      "department_id": "CM004003",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004003005",
+      "name": "Kalfou",
+      "department_id": "CM004003",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004003006",
+      "name": "Kar-Hay",
+      "department_id": "CM004003",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004003007",
+      "name": "Maga",
+      "department_id": "CM004003",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004003008",
+      "name": "Tchatibali",
+      "department_id": "CM004003",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004003009",
+      "name": "Vele",
+      "department_id": "CM004003",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004003010",
+      "name": "Wina",
+      "department_id": "CM004003",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004003011",
+      "name": "Yagoua",
+      "department_id": "CM004003",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004004001",
+      "name": "Guidiguis",
+      "department_id": "CM004004",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004004002",
+      "name": "Kaele",
+      "department_id": "CM004004",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004004003",
+      "name": "Mindif",
+      "department_id": "CM004004",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004004004",
+      "name": "Moulvoudaye",
+      "department_id": "CM004004",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004004005",
+      "name": "Moutourwa",
+      "department_id": "CM004004",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004004006",
+      "name": "Porhi",
+      "department_id": "CM004004",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004004007",
+      "name": "Taibong",
+      "department_id": "CM004004",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004005001",
+      "name": "Kolofata",
+      "department_id": "CM004005",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004005002",
+      "name": "Mora",
+      "department_id": "CM004005",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004005003",
+      "name": "Tokombere",
+      "department_id": "CM004005",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004006001",
+      "name": "Bourrha",
+      "department_id": "CM004006",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004006002",
+      "name": "Hina",
+      "department_id": "CM004006",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004006003",
+      "name": "Koza",
+      "department_id": "CM004006",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004006004",
+      "name": "Mayo-Moskota",
+      "department_id": "CM004006",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004006005",
+      "name": "Mogode",
+      "department_id": "CM004006",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004006006",
+      "name": "Mokolo",
+      "department_id": "CM004006",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM004006007",
+      "name": "Soulede-Roua",
+      "department_id": "CM004006",
+      "region_id": "CM004"
+    },
+    {
+      "id": "CM005001001",
+      "name": "Bare-Bakem",
+      "department_id": "CM005001",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005001002",
+      "name": "Dibombari",
+      "department_id": "CM005001",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005001003",
+      "name": "Fiko",
+      "department_id": "CM005001",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005001004",
+      "name": "Loum",
+      "department_id": "CM005001",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005001005",
+      "name": "Manjo",
+      "department_id": "CM005001",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005001006",
+      "name": "Mbanga",
+      "department_id": "CM005001",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005001007",
+      "name": "Melong",
+      "department_id": "CM005001",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005001008",
+      "name": "Mombo",
+      "department_id": "CM005001",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005001009",
+      "name": "Njombe-Penja",
+      "department_id": "CM005001",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005001010",
+      "name": "Nkongsamba 1er",
+      "department_id": "CM005001",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005001011",
+      "name": "Nkongsamba 2e",
+      "department_id": "CM005001",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005001012",
+      "name": "Nkongsamba 3e",
+      "department_id": "CM005001",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005001013",
+      "name": "Nlonako",
+      "department_id": "CM005001",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005002001",
+      "name": "Nkondjock",
+      "department_id": "CM005002",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005002002",
+      "name": "Nord-Makombe",
+      "department_id": "CM005002",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005002003",
+      "name": "Yabassi",
+      "department_id": "CM005002",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005002004",
+      "name": "Yingui",
+      "department_id": "CM005002",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005003001",
+      "name": "Dibamba",
+      "department_id": "CM005003",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005003002",
+      "name": "Dizangue",
+      "department_id": "CM005003",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005003003",
+      "name": "Edea 1er",
+      "department_id": "CM005003",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005003004",
+      "name": "Edea 2e",
+      "department_id": "CM005003",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005003005",
+      "name": "Massock-Songloulou",
+      "department_id": "CM005003",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005003006",
+      "name": "Mouanko",
+      "department_id": "CM005003",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005003007",
+      "name": "Ndom",
+      "department_id": "CM005003",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005003008",
+      "name": "Ngambe",
+      "department_id": "CM005003",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005003009",
+      "name": "Ngwei",
+      "department_id": "CM005003",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005003010",
+      "name": "Nyanon",
+      "department_id": "CM005003",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005003011",
+      "name": "Pouma",
+      "department_id": "CM005003",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005004001",
+      "name": "Douala 1er",
+      "department_id": "CM005004",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005004002",
+      "name": "Douala 2e",
+      "department_id": "CM005004",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005004003",
+      "name": "Douala 3e",
+      "department_id": "CM005004",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005004004",
+      "name": "Douala 4e",
+      "department_id": "CM005004",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005004005",
+      "name": "Douala 5e",
+      "department_id": "CM005004",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM005004006",
+      "name": "Douala 6e",
+      "department_id": "CM005004",
+      "region_id": "CM005"
+    },
+    {
+      "id": "CM006001001",
+      "name": "Bascheo",
+      "department_id": "CM006001",
+      "region_id": "CM006"
+    },
+    {
+      "id": "CM006001002",
+      "name": "Bibemi",
+      "department_id": "CM006001",
+      "region_id": "CM006"
+    },
+    {
+      "id": "CM006001003",
+      "name": "Dembo",
+      "department_id": "CM006001",
+      "region_id": "CM006"
+    },
+    {
+      "id": "CM006001004",
+      "name": "Demsa",
+      "department_id": "CM006001",
+      "region_id": "CM006"
+    },
+    {
+      "id": "CM006001005",
+      "name": "Garoua 1er",
+      "department_id": "CM006001",
+      "region_id": "CM006"
+    },
+    {
+      "id": "CM006001006",
+      "name": "Garoua 2e",
+      "department_id": "CM006001",
+      "region_id": "CM006"
+    },
+    {
+      "id": "CM006001007",
+      "name": "Garoua 3e",
+      "department_id": "CM006001",
+      "region_id": "CM006"
+    },
+    {
+      "id": "CM006001008",
+      "name": "Lagdo",
+      "department_id": "CM006001",
+      "region_id": "CM006"
+    },
+    {
+      "id": "CM006001009",
+      "name": "Mayo-Hourna",
+      "department_id": "CM006001",
+      "region_id": "CM006"
+    },
+    {
+      "id": "CM006001010",
+      "name": "Pitoa",
+      "department_id": "CM006001",
+      "region_id": "CM006"
+    },
+    {
+      "id": "CM006001011",
+      "name": "Tcheboa",
+      "department_id": "CM006001",
+      "region_id": "CM006"
+    },
+    {
+      "id": "CM006001012",
+      "name": "Touroua",
+      "department_id": "CM006001",
+      "region_id": "CM006"
+    },
+    {
+      "id": "CM006002001",
+      "name": "Beka",
+      "department_id": "CM006002",
+      "region_id": "CM006"
+    },
+    {
+      "id": "CM006002002",
+      "name": "Poli",
+      "department_id": "CM006002",
+      "region_id": "CM006"
+    },
+    {
+      "id": "CM006003001",
+      "name": "Figuil",
+      "department_id": "CM006003",
+      "region_id": "CM006"
+    },
+    {
+      "id": "CM006003002",
+      "name": "Guider",
+      "department_id": "CM006003",
+      "region_id": "CM006"
+    },
+    {
+      "id": "CM006003003",
+      "name": "Mayo-Oulo",
+      "department_id": "CM006003",
+      "region_id": "CM006"
+    },
+    {
+      "id": "CM006004001",
+      "name": "Madingring",
+      "department_id": "CM006004",
+      "region_id": "CM006"
+    },
+    {
+      "id": "CM006004002",
+      "name": "Rey-Bouba",
+      "department_id": "CM006004",
+      "region_id": "CM006"
+    },
+    {
+      "id": "CM006004003",
+      "name": "Tchollire",
+      "department_id": "CM006004",
+      "region_id": "CM006"
+    },
+    {
+      "id": "CM006004004",
+      "name": "Touboro",
+      "department_id": "CM006004",
+      "region_id": "CM006"
+    },
+    {
+      "id": "CM007001001",
+      "name": "Belo",
+      "department_id": "CM007001",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007001002",
+      "name": "Bum",
+      "department_id": "CM007001",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007001003",
+      "name": "Fundong",
+      "department_id": "CM007001",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007001004",
+      "name": "Njinikom",
+      "department_id": "CM007001",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007002001",
+      "name": "Jakiri",
+      "department_id": "CM007002",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007002002",
+      "name": "Kumbo",
+      "department_id": "CM007002",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007002003",
+      "name": "Mbven",
+      "department_id": "CM007002",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007002004",
+      "name": "Nkum",
+      "department_id": "CM007002",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007002005",
+      "name": "Noni",
+      "department_id": "CM007002",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007002006",
+      "name": "Oku",
+      "department_id": "CM007002",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007003001",
+      "name": "Ako",
+      "department_id": "CM007003",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007003002",
+      "name": "Misaje",
+      "department_id": "CM007003",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007003003",
+      "name": "Ndu",
+      "department_id": "CM007003",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007003004",
+      "name": "Nkambe",
+      "department_id": "CM007003",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007003005",
+      "name": "Nwa",
+      "department_id": "CM007003",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007004001",
+      "name": "Fungom",
+      "department_id": "CM007004",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007004002",
+      "name": "Furu-Awa",
+      "department_id": "CM007004",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007004003",
+      "name": "Menchum-Valley",
+      "department_id": "CM007004",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007004004",
+      "name": "Wum",
+      "department_id": "CM007004",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007005001",
+      "name": "Bafut",
+      "department_id": "CM007005",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007005002",
+      "name": "Bali",
+      "department_id": "CM007005",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007005003",
+      "name": "Bamenda 1st",
+      "department_id": "CM007005",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007005004",
+      "name": "Bamenda 2nd",
+      "department_id": "CM007005",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007005005",
+      "name": "Bamenda 3rd",
+      "department_id": "CM007005",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007005006",
+      "name": "Santa",
+      "department_id": "CM007005",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007005007",
+      "name": "Tubah",
+      "department_id": "CM007005",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007006001",
+      "name": "Batibo",
+      "department_id": "CM007006",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007006002",
+      "name": "Mbengwi",
+      "department_id": "CM007006",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007006003",
+      "name": "Ngie",
+      "department_id": "CM007006",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007006004",
+      "name": "Njikwa",
+      "department_id": "CM007006",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007006005",
+      "name": "Widikum",
+      "department_id": "CM007006",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007007001",
+      "name": "Babessi",
+      "department_id": "CM007007",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007007002",
+      "name": "Balikumbat",
+      "department_id": "CM007007",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM007007003",
+      "name": "Ndop",
+      "department_id": "CM007007",
+      "region_id": "CM007"
+    },
+    {
+      "id": "CM009001001",
+      "name": "Bengbis",
+      "department_id": "CM009001",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM009001002",
+      "name": "Djoum",
+      "department_id": "CM009001",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM009001003",
+      "name": "Meyomessala",
+      "department_id": "CM009001",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM009001004",
+      "name": "Meyomessi",
+      "department_id": "CM009001",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM009001005",
+      "name": "Mintom",
+      "department_id": "CM009001",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM009001006",
+      "name": "Oveng",
+      "department_id": "CM009001",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM009001007",
+      "name": "Sangmelima",
+      "department_id": "CM009001",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM009001008",
+      "name": "Zoetele",
+      "department_id": "CM009001",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM009002001",
+      "name": "Biwong-Bane",
+      "department_id": "CM009002",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM009002002",
+      "name": "Biwong-Bulu",
+      "department_id": "CM009002",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM009002003",
+      "name": "Ebolowa 1er",
+      "department_id": "CM009002",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM009002004",
+      "name": "Ebolowa 2e",
+      "department_id": "CM009002",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM009002005",
+      "name": "Efoulan",
+      "department_id": "CM009002",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM009002006",
+      "name": "Mengong",
+      "department_id": "CM009002",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM009002007",
+      "name": "Mvangane",
+      "department_id": "CM009002",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM009002008",
+      "name": "Ngoulemakong",
+      "department_id": "CM009002",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM009003001",
+      "name": "Akom 2",
+      "department_id": "CM009003",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM009003002",
+      "name": "Bipindi",
+      "department_id": "CM009003",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM009003003",
+      "name": "Campo",
+      "department_id": "CM009003",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM009003004",
+      "name": "Kribi 1er",
+      "department_id": "CM009003",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM009003005",
+      "name": "Kribi 2e",
+      "department_id": "CM009003",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM009003006",
+      "name": "Lokoundje",
+      "department_id": "CM009003",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM009003007",
+      "name": "Lolodorf",
+      "department_id": "CM009003",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM009003008",
+      "name": "Mvengue",
+      "department_id": "CM009003",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM009003009",
+      "name": "Niete",
+      "department_id": "CM009003",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM009004001",
+      "name": "Ambam",
+      "department_id": "CM009004",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM009004002",
+      "name": "Kye-Ossi",
+      "department_id": "CM009004",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM009004003",
+      "name": "Maan",
+      "department_id": "CM009004",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM009004004",
+      "name": "Olamze",
+      "department_id": "CM009004",
+      "region_id": "CM009"
+    },
+    {
+      "id": "CM010001001",
+      "name": "Buea",
+      "department_id": "CM010001",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010001002",
+      "name": "Limbe 1st",
+      "department_id": "CM010001",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010001003",
+      "name": "Limbe 2nd",
+      "department_id": "CM010001",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010001004",
+      "name": "Limbe 3rd",
+      "department_id": "CM010001",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010001005",
+      "name": "Muyuka",
+      "department_id": "CM010001",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010001006",
+      "name": "Tiko",
+      "department_id": "CM010001",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010001007",
+      "name": "West-Coast",
+      "department_id": "CM010001",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010002001",
+      "name": "Bangem",
+      "department_id": "CM010002",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010002002",
+      "name": "Nguti",
+      "department_id": "CM010002",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010002003",
+      "name": "Tombel",
+      "department_id": "CM010002",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010003001",
+      "name": "Alou",
+      "department_id": "CM010003",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010003002",
+      "name": "Fontem",
+      "department_id": "CM010003",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010003003",
+      "name": "Wabane",
+      "department_id": "CM010003",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010004001",
+      "name": "Akwaya",
+      "department_id": "CM010004",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010004002",
+      "name": "Eyumodjock",
+      "department_id": "CM010004",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010004003",
+      "name": "Mamfe",
+      "department_id": "CM010004",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010004004",
+      "name": "Upper Bayang",
+      "department_id": "CM010004",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010005001",
+      "name": "Konye",
+      "department_id": "CM010005",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010005002",
+      "name": "Kumba 1st",
+      "department_id": "CM010005",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010005003",
+      "name": "Kumba 2nd",
+      "department_id": "CM010005",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010005004",
+      "name": "Kumba 3rd",
+      "department_id": "CM010005",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010005005",
+      "name": "Mbonge",
+      "department_id": "CM010005",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010006001",
+      "name": "Bamusso",
+      "department_id": "CM010006",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010006002",
+      "name": "Dikome Balue",
+      "department_id": "CM010006",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010006003",
+      "name": "Ekondo Titi",
+      "department_id": "CM010006",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010006004",
+      "name": "Idabato",
+      "department_id": "CM010006",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010006005",
+      "name": "Isangele",
+      "department_id": "CM010006",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010006006",
+      "name": "Kombo Abedimo",
+      "department_id": "CM010006",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010006007",
+      "name": "Kombo Itindi",
+      "department_id": "CM010006",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010006008",
+      "name": "Mundemba",
+      "department_id": "CM010006",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM010006009",
+      "name": "Toko",
+      "department_id": "CM010006",
+      "region_id": "CM010"
+    },
+    {
+      "id": "CM008001001",
+      "name": "Babadjou",
+      "department_id": "CM008001",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008001002",
+      "name": "Batcham",
+      "department_id": "CM008001",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008001003",
+      "name": "Galim",
+      "department_id": "CM008001",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008001004",
+      "name": "Mbouda",
+      "department_id": "CM008001",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008002001",
+      "name": "Bafang",
+      "department_id": "CM008002",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008002002",
+      "name": "Bakou",
+      "department_id": "CM008002",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008002003",
+      "name": "Bana",
+      "department_id": "CM008002",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008002004",
+      "name": "Bandja",
+      "department_id": "CM008002",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008002005",
+      "name": "Banka",
+      "department_id": "CM008002",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008002006",
+      "name": "Banwa",
+      "department_id": "CM008002",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008002007",
+      "name": "Kekem",
+      "department_id": "CM008002",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008003001",
+      "name": "Baham",
+      "department_id": "CM008003",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008003002",
+      "name": "Bamendjou",
+      "department_id": "CM008003",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008003003",
+      "name": "Bangou",
+      "department_id": "CM008003",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008003004",
+      "name": "Batie",
+      "department_id": "CM008003",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008004001",
+      "name": "Bayangam",
+      "department_id": "CM008004",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008004002",
+      "name": "Djebem",
+      "department_id": "CM008004",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008004003",
+      "name": "Poumougne",
+      "department_id": "CM008004",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008005001",
+      "name": "Dschang",
+      "department_id": "CM008005",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008005002",
+      "name": "Fokoue",
+      "department_id": "CM008005",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008005003",
+      "name": "Fongo-Tongo",
+      "department_id": "CM008005",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008005004",
+      "name": "Nkong-Ni",
+      "department_id": "CM008005",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008005005",
+      "name": "Penka-Michel",
+      "department_id": "CM008005",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008005006",
+      "name": "Santchou",
+      "department_id": "CM008005",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008006001",
+      "name": "Bafoussam 1er",
+      "department_id": "CM008006",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008006002",
+      "name": "Bafoussam 2e",
+      "department_id": "CM008006",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008006003",
+      "name": "Bafoussam 3e",
+      "department_id": "CM008006",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008007001",
+      "name": "Bangangte",
+      "department_id": "CM008007",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008007002",
+      "name": "Bassamba",
+      "department_id": "CM008007",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008007003",
+      "name": "Bazou",
+      "department_id": "CM008007",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008007004",
+      "name": "Tonga",
+      "department_id": "CM008007",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008008001",
+      "name": "Bangourain",
+      "department_id": "CM008008",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008008002",
+      "name": "Foumban",
+      "department_id": "CM008008",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008008003",
+      "name": "Foumbot",
+      "department_id": "CM008008",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008008004",
+      "name": "Kouoptamo",
+      "department_id": "CM008008",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008008005",
+      "name": "Koutaba",
+      "department_id": "CM008008",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008008006",
+      "name": "Magba",
+      "department_id": "CM008008",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008008007",
+      "name": "Malantouen",
+      "department_id": "CM008008",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008008008",
+      "name": "Massangam",
+      "department_id": "CM008008",
+      "region_id": "CM008"
+    },
+    {
+      "id": "CM008008009",
+      "name": "Njimom",
+      "department_id": "CM008008",
+      "region_id": "CM008"
+    }
+  ]
+}
