@@ -42,3 +42,20 @@ test("mobile login page has no horizontal overflow", async ({ page }) => {
   }));
   expect(dimensions.content).toBeLessThanOrEqual(dimensions.viewport + 1);
 });
+
+test("password recovery opens without sending an email", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Mot de passe oublié ?" }).click();
+  await expect(page.getByText("Saisis ton adresse e-mail pour recevoir un lien de réinitialisation.")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Envoyer le lien" })).toBeVisible();
+  await expect(page.locator('input[type="password"]')).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Retour à la connexion" })).toBeVisible();
+});
+
+test("privacy policy opens from the public login page", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Politique de confidentialité" }).click();
+  const dialog = page.getByRole("dialog", { name: "Politique de confidentialité" });
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByText("Données traitées")).toBeVisible();
+});
