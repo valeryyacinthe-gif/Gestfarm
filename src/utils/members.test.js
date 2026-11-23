@@ -2,11 +2,12 @@ import { describe, expect, it } from "vitest";
 import { permissionsForRole, resolveMemberStatus } from "./members";
 
 describe("permissionsForRole", () => {
-  it("keeps team administration reserved to the promoter", () => {
+  it("allows managers to manage tasks but keeps deletion reserved", () => {
     expect(permissionsForRole("manager").equipe).toEqual({
-      read: true, create: false, update: false, delete: false
+      read: true, create: true, update: true, delete: false
     });
-    expect(permissionsForRole("promoter").equipe.create).toBe(true);
+    expect(permissionsForRole("promoter").equipe.delete).toBe(true);
+    expect(permissionsForRole("viewer").equipe.create).toBeUndefined();
   });
 
   it("returns an independent permission object", () => {
