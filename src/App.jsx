@@ -1,12 +1,13 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   LayoutDashboard, Tractor, ClipboardList, Wallet, Package, BarChart3,
-  Users, ClipboardCheck, Menu, X, LogOut, Plus, RefreshCw, Search,
+  Users, ClipboardCheck, Menu, X, LogOut, Plus, RefreshCw, Search, MapPin,
   AlertCircle, CheckCircle2, Trash2, CalendarDays, Activity, MessageSquare, MailCheck, Settings
 } from "lucide-react";
 import { supabase } from "./supabase";
 import { stockEquivalent } from "./utils/stock";
 import { permissionsForRole, resolveMemberStatus } from "./utils/members";
+import cameroonAdminData from "./data/cameroon-admin-divisions.json";
 
 // Stockage local hors connexion (IndexedDB) : isolé par compte utilisateur.
 const GESTFARM_DB = "gestfarm-offline-v1";
@@ -85,6 +86,10 @@ const money = (n) => `${Number(n || 0).toLocaleString("fr-FR")} FCFA`;
 const dateLabel = (d) => d ? new Date(`${d}T00:00:00`).toLocaleDateString("fr-FR") : "—";
 const addDaysToDate = (date, days) => { if (!date) return ""; const d = new Date(`${date}T00:00:00Z`); d.setUTCDate(d.getUTCDate() + days); return d.toISOString().slice(0, 10); };
 const speciesNames = { broilers: "Poulets de chair", layers: "Poules pondeuses", rabbits: "Lapins", pigs: "Porcs" };
+const CAMEROON_REGIONS = cameroonAdminData.regions || [];
+const CAMEROON_DEPARTMENTS = cameroonAdminData.departments || [];
+const CAMEROON_ARRONDISSEMENTS = cameroonAdminData.arrondissements || [];
+const geoLabel = (code, rows) => rows.find(x => x.id === code)?.name || "";
 const stockUnits = ["kg", "g", "sac", "tonne", "L", "unité", "pièce", "boîte", "flacon", "bidon", "carton", "rouleau", "ml", "autre"];
 const stockUnitLabels = { kg:"Kilogramme (kg)", g:"Gramme (g)", sac:"Sac", tonne:"Tonne (t)", L:"Litre (L)", unité:"Unité", pièce:"Pièce", boîte:"Boîte", flacon:"Flacon", bidon:"Bidon", carton:"Carton", rouleau:"Rouleau", ml:"Millilitre (ml)", autre:"Autre" };
 const stockCategories = {
@@ -111,6 +116,7 @@ const nav = [
   ["tasks", "Tâches et absences", ClipboardCheck],
   ["activity", "Journal d’activité", Activity],
   ["suggestions", "Suggestions", MessageSquare],
+  ["adminOverview", "Administration générale", BarChart3],
   ["adminSuggestions", "Administration — retours", MailCheck],
   ["account", "Compte et suppression", Settings]
 ];
@@ -162,8 +168,8 @@ function farmGroupsForSpecies(allGroups, allCycles, farmId, species) {
 function PrivacyText() {
   return <div style={{fontSize:13,lineHeight:1.65,color:"#405047",margin:"16px 0"}}>
     <p><b>Version de travail — à compléter et à faire valider avant la mise en production.</b> Cette notice explique les grandes lignes du traitement des données dans GESTFARM.</p>
-    <h3>Données traitées</h3><p>Selon les fonctions utilisées, GESTFARM peut traiter les informations de compte (nom, adresse e-mail et identifiants techniques), les données des exploitations et de leurs équipes, les suivis d’élevage, les stocks, les opérations financières, les tâches, les journaux d’activité ainsi que les messages envoyés dans la boîte à suggestions.</p>
-    <h3>Finalités</h3><p>Ces données servent à créer et sécuriser les comptes, gérer les exploitations, permettre la collaboration selon les habilitations attribuées, conserver l’historique des opérations, assurer le fonctionnement du service et traiter les demandes d’assistance et suggestions.</p>
+    <h3>Données traitées</h3><p>Selon les fonctions utilisées, GESTFARM peut traiter les informations de compte (nom, adresse e-mail et identifiants techniques), les données des exploitations et de leurs équipes, la localisation administrative de l’exploitation (pays, région, département, arrondissement et ville/village/localité), les suivis d’élevage, les stocks, les opérations financières, les tâches, les journaux d’activité ainsi que les messages envoyés dans la boîte à suggestions.</p>
+    <h3>Finalités</h3><p>Ces données servent à créer et sécuriser les comptes, gérer les exploitations, permettre la collaboration selon les habilitations attribuées, conserver l’historique des opérations, assurer le fonctionnement du service et traiter les demandes d’assistance et suggestions. La localisation ne sera utilisée dans les statistiques géographiques et les travaux de recherche qu’avec l’accord facultatif de l’utilisateur ; les résultats de recherche seront agrégés et ne présenteront pas les identités des éleveurs.</p>
     <h3>Hébergement et prestataires</h3><p>Le service utilise Supabase pour l’authentification et le stockage des données, ainsi que Vercel pour l’hébergement de l’application. Ces prestataires techniques peuvent traiter des données dans le cadre de la fourniture de leurs services, selon leurs propres engagements contractuels et politiques.</p>
     <h3>Accès et sécurité</h3><p>L’accès aux données dépend de l’authentification et des autorisations configurées dans l’application. Des mesures techniques, notamment les règles de sécurité au niveau des lignes de la base de données, sont utilisées. Aucun système ne peut toutefois garantir une sécurité absolue. Ne partage jamais ton mot de passe.</p>
     <h3>Conservation et partage</h3><p>Les données sont conservées pendant la durée nécessaire au fonctionnement du compte et aux finalités décrites, puis selon les obligations légales et les procédures de suppression qui seront définies par le responsable du service. Les durées précises et les éventuels transferts internationaux doivent être documentés avant la mise en production. Les données ne doivent pas être vendues.</p>
@@ -237,6 +243,9 @@ export default function App() {
   const [suggestionMessage, setSuggestionMessage] = useState("");
   const [suggestionBusy, setSuggestionBusy] = useState(false);
   const [suggestionRows, setSuggestionRows] = useState([]);
+  const [adminOverview, setAdminOverview] = useState(null);
+  const [adminOverviewBusy, setAdminOverviewBusy] = useState(false);
+  const [adminOverviewError, setAdminOverviewError] = useState("");
   const [sales, setSales] = useState([]);
   const [offspringBatches, setOffspringBatches] = useState([]);
   const [stockTransfers, setStockTransfers] = useState([]);
@@ -346,6 +355,7 @@ export default function App() {
   }, [session?.user?.id, farms.length]);
   useEffect(() => { if (session?.user) loadAll(); }, [session?.user?.id]);
   useEffect(() => { if (session?.user?.id && (page === "suggestions" || page === "adminSuggestions")) loadSuggestions(); }, [session?.user?.id, page]);
+  useEffect(() => { if (session?.user?.id && page === "adminOverview") loadAdminOverview(); }, [session?.user?.id, page]);
   useEffect(() => {
     const updateOnline=()=>{setIsOnline(navigator.onLine);};
     window.addEventListener("online",updateOnline); window.addEventListener("offline",updateOnline);
@@ -549,6 +559,30 @@ export default function App() {
     const { data, error } = await supabase.from("gestfarm_suggestions").select("*").order("created_at", { ascending: false }).limit(500);
     if (error) { setSuggestionError("Impossible de charger tes retours pour le moment."); return; }
     setSuggestionRows(data || []);
+  }
+
+  async function loadAdminOverview() {
+    if (!session?.user?.id || (session.user.email || "").toLowerCase() !== "valery.yacinthe@gmail.com") return;
+    setAdminOverviewBusy(true); setAdminOverviewError("");
+    const { data, error } = await supabase.rpc("gestfarm_global_admin_overview");
+    if (error) setAdminOverviewError("Impossible de charger les statistiques générales : " + error.message);
+    else setAdminOverview(data || null);
+    setAdminOverviewBusy(false);
+  }
+
+  function exportAdminResearchData() {
+    if (!adminOverview) return;
+    const rows = [["Type","Niveau","Localisation","Nombre d'exploitations"]];
+    CAMEROON_REGIONS.forEach(region => { const x=(adminOverview.regions||[]).find(item=>item.code===region.id); rows.push(["Répartition géographique","Région",region.name,x?.count||0]); });
+    CAMEROON_DEPARTMENTS.forEach(department => { const x=(adminOverview.departments||[]).find(item=>item.code===department.id); rows.push(["Répartition géographique","Département",department.name,x?.count||0]); });
+    (adminOverview.arrondissements || []).forEach(x => rows.push(["Répartition géographique","Arrondissement",x.name,x.count]));
+    (adminOverview.localities || []).forEach(x => rows.push(["Répartition géographique","Ville / localité",x.name,x.count]));
+    (adminOverview.registrations_by_month || []).forEach(x => rows.push(["Inscriptions","Mois",x.month,x.count]));
+    (adminOverview.species || []).forEach(x => rows.push(["Activités","Espèce",x.name,x.count]));
+    const csv = rows.map(row => row.map(value => '"' + String(value ?? "").replace(/"/g,'""') + '"').join(";")).join("\r\n");
+    const blob = new Blob(["\\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob); const link = document.createElement("a");
+    link.href = url; link.download = "GESTFARM_donnees_agregees_recherche.csv"; link.click(); URL.revokeObjectURL(url);
   }
 
   async function submitSuggestion(e) {
@@ -882,7 +916,22 @@ export default function App() {
     try {
       let farm = activeFarm;
       if (!farm) {
-        const farmRow={ id:makeLocalId(), owner_id:session.user.id, name:form.farm_name?.trim() || "Mon exploitation", location:form.location?.trim() || null };
+        const region = CAMEROON_REGIONS.find(x => x.id === form.region_code);
+        const department = CAMEROON_DEPARTMENTS.find(x => x.id === form.department_code);
+        const arrondissement = CAMEROON_ARRONDISSEMENTS.find(x => x.id === form.arrondissement_code);
+        if (!region || !department || !arrondissement || department.region_id !== region.id || arrondissement.department_id !== department.id) {
+          throw new Error("Sélectionne correctement la région, le département et l’arrondissement de l’exploitation.");
+        }
+        const locality = form.locality?.trim();
+        if (!locality) throw new Error("Indique la ville, le village ou la localité de l’exploitation.");
+        const locationParts = [locality, arrondissement.name, department.name, region.name, "Cameroun"].filter(Boolean);
+        const farmRow={
+          id:makeLocalId(), owner_id:session.user.id, name:form.farm_name?.trim() || "Mon exploitation",
+          location:locationParts.join(", "), country_code:"CM", country_name:"Cameroun",
+          research_consent:form.research_consent===true, research_consent_at:form.research_consent===true?new Date().toISOString():null,
+          region_code:region.id, region:region.name, department_code:department.id, department:department.name,
+          arrondissement_code:arrondissement.id, arrondissement:arrondissement.name, locality
+        };
         const r=await writeRow("farms",farmRow);
         if (!r.queued) createdFarmId = farmRow.id;
         farm = farmRow;
@@ -1636,7 +1685,7 @@ export default function App() {
   const visibleNav = nav.filter(([id]) => {
     // Le mode individuel simplifie uniquement la navigation ; les permissions serveur restent inchangées.
     if (workspaceMode === "individual" && (id === "team" || id === "tasks")) return false;
-    if (id === "adminSuggestions") return isGlobalAdmin;
+    if (id === "adminOverview" || id === "adminSuggestions") return isGlobalAdmin;
     if (id === "account") return true;
     if (!activeFarm || isFarmOwner || id === "suggestions") return true;
     const permissions = currentFarmMember?.permissions || {};
@@ -1802,7 +1851,8 @@ export default function App() {
         <p style={{fontSize:13,lineHeight:1.65,color:"#536258",margin:0}}>La suppression est réservée au propriétaire. Les employés ne peuvent pas supprimer l’entreprise du promoteur. Le système vérifie aussi qu’un compte propriétaire n’est pas encore membre d’une autre exploitation avant de supprimer son identité.</p>
       </div>
     </>;
-    if (!activeFarm && page !== "farms" && page !== "suggestions") return <div style={styles.panel}><Empty text="Commence par créer ton premier élevage dans « Mes élevages »."/></div>;
+    if ((page === "adminOverview" || page === "adminSuggestions") && !isGlobalAdmin) return <div style={styles.panel}><Empty text="Accès réservé à l’administration générale de GESTFARM."/></div>;
+    if (!activeFarm && page !== "farms" && page !== "suggestions" && page !== "adminOverview" && page !== "adminSuggestions") return <div style={styles.panel}><Empty text="Commence par créer ton premier élevage dans « Mes élevages »."/></div>;
     if (page === "dashboard") return <>
       <SectionTitle title="Tableau de bord" subtitle={activeFarm ? `Vue d’ensemble — ${activeFarm.name}` : "Vue d’ensemble de ton activité"} action={<Button secondary onClick={loadAll}><RefreshCw size={15}/> Actualiser</Button>}/>
       <div style={{...styles.panel,marginBottom:16,display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,flexWrap:"wrap"}}>
@@ -1840,7 +1890,7 @@ export default function App() {
             </div>
           </div>;
         })}</div> : <div style={styles.panel}><Empty text="Aucune fiche d’élevage pour cette exploitation. Ajoute ta première activité : poulets de chair, poules pondeuses, lapins ou porcs."/></div>}
-        <div style={{...styles.panel,marginTop:16}}><div style={{display:"flex",justifyContent:"space-between",gap:10,alignItems:"center",flexWrap:"wrap"}}><div><h3 style={styles.panelTitle}>Organisation de l’exploitation</h3><p style={styles.muted}>Tu peux travailler seul ou ajouter des employés lorsque ton activité grandit.</p></div>{isFarmOwner&&<div style={{display:"flex",gap:8,flexWrap:"wrap"}}><Button secondary onClick={()=>openModal("farmEdit",{name:activeFarm.name,location:activeFarm.location||""})}>Modifier l’exploitation</Button><Button secondary onClick={()=>archiveFarm(activeFarm)}><Trash2 size={14}/> Supprimer l’exploitation</Button></div>}</div></div>
+        <div style={{...styles.panel,marginTop:16}}><div style={{display:"flex",justifyContent:"space-between",gap:10,alignItems:"center",flexWrap:"wrap"}}><div><h3 style={styles.panelTitle}>Organisation de l’exploitation</h3><p style={styles.muted}>Tu peux travailler seul ou ajouter des employés lorsque ton activité grandit.</p></div>{isFarmOwner&&<div style={{display:"flex",gap:8,flexWrap:"wrap"}}><Button secondary onClick={()=>openModal("farmEdit",{name:activeFarm.name,location:activeFarm.location||"",region_code:activeFarm.region_code||"",department_code:activeFarm.department_code||"",arrondissement_code:activeFarm.arrondissement_code||"",locality:activeFarm.locality||"",research_consent:activeFarm.research_consent===true})}>Modifier l’exploitation</Button><Button secondary onClick={()=>archiveFarm(activeFarm)}><Trash2 size={14}/> Supprimer l’exploitation</Button></div>}</div></div>
       </>}
       {(isFarmOwner||archivedFarms.length>0)&&<div style={{...styles.panel,marginTop:16}}><h3 style={styles.panelTitle}>Corbeille — récupération</h3><p style={styles.muted}>Les éléments supprimés restent conservés ici. Tu peux les restaurer avec leurs données et leur historique.</p>
         {archivedFarms.length>0&&<div style={{marginBottom:12}}><b>Exploitations</b>{archivedFarms.map(f=><div key={f.id} style={styles.listRow}><span>{f.name} · supprimée le {new Date(f.deleted_at).toLocaleDateString("fr-FR")}</span><Button secondary onClick={()=>restoreArchived("farm",f)}>Restaurer</Button></div>)}</div>}
@@ -1999,6 +2049,40 @@ export default function App() {
       <div style={styles.twoCols}><div style={styles.panel}><h3 style={styles.panelTitle}>Tâches</h3>{farmTasks.length?farmTasks.map(t=><div key={t.id} style={styles.listRow}><div><b>{t.title}</b><div style={styles.muted}>{t.description||"Sans description"}</div></div><select value={t.status||"pending"} onChange={e=>updateTask(t,e.target.value)} disabled={!canUpdateTeam} style={{...inputStyle,width:130}}><option value="pending">En attente</option><option value="in_progress">En cours</option><option value="completed">Terminée</option><option value="cancelled">Annulée</option></select></div>):<Empty text="Aucune tâche enregistrée."/>}</div>
       <div style={styles.panel}><h3 style={styles.panelTitle}>Absences</h3>{farmAbsences.length?farmAbsences.map(a=><div key={a.id} style={styles.listRow}><div><b>{farmMembers.find(m=>m.id===a.member_id)?.full_name||farmMembers.find(m=>m.id===a.member_id)?.email||"Membre"}</b><div style={styles.muted}>{a.reason||"Motif non précisé"}</div></div><span style={styles.muted}>{dateLabel(a.start_date)} – {dateLabel(a.end_date)}</span></div>):<Empty text="Aucune absence enregistrée."/>}</div></div>
     </>;
+    if (page === "adminOverview" && isGlobalAdmin) return <>
+      <SectionTitle title="Administration générale" subtitle="Indicateurs globaux et répartition géographique agrégée de GESTFARM." action={<div style={{display:"flex",gap:8,flexWrap:"wrap"}}><Button secondary onClick={loadAdminOverview}><RefreshCw size={15}/> Actualiser</Button><Button onClick={exportAdminResearchData} disabled={!adminOverview}>Exporter les données agrégées</Button></div>}/>
+      {adminOverviewError&&<p style={styles.error}>{adminOverviewError}</p>}
+      {adminOverviewBusy&&!adminOverview?<div style={styles.panel}>Chargement des indicateurs…</div>:adminOverview&&<>
+        <div style={styles.statsGrid}>
+          <Card title="Comptes inscrits" value={Number(adminOverview.users_total||0).toLocaleString("fr-FR")} hint="Comptes GESTFARM" icon={Users}/>
+          <Card title="Comptes confirmés" value={Number(adminOverview.users_confirmed||0).toLocaleString("fr-FR")} hint="Adresse e-mail confirmée" icon={CheckCircle2}/>
+          <Card title="Exploitations actives" value={Number(adminOverview.farms_total||0).toLocaleString("fr-FR")} hint="Hors exploitations archivées" icon={Tractor}/>
+          <Card title="Retours reçus" value={Number(adminOverview.suggestions_total||0).toLocaleString("fr-FR")} hint={Number(adminOverview.suggestions_new||0)+" nouveaux à examiner"} icon={MessageSquare}/>
+        </div>
+        <div style={styles.panel}>
+          <h3 style={styles.panelTitle}>Répartition géographique au Cameroun</h3>
+          <p style={styles.muted}>Données agrégées par région, département et arrondissement. Aucun nom d’éleveur, e-mail ou détail financier individuel n’est affiché dans cet espace statistique.</p>
+          <div style={styles.statsGrid}>
+            <Card title="Avec accord de recherche" value={Number(adminOverview.farms_research_consented||0).toLocaleString("fr-FR")} hint="Localisations utilisables en statistiques anonymisées" icon={CheckCircle2}/>
+            <Card title="Localisation complète" value={Number(adminOverview.farms_geolocated||0).toLocaleString("fr-FR")} hint="Parmi les exploitations ayant donné leur accord" icon={MapPin}/>
+            <Card title="À compléter" value={Number(adminOverview.farms_location_missing||0).toLocaleString("fr-FR")} hint="Localisations incomplètes parmi les accords" icon={AlertCircle}/>
+          </div>
+          <h4 style={{color:GREEN,margin:"18px 0 8px"}}>Par région</h4>
+          <div style={styles.tableWrap}><table style={styles.table}><thead><tr><th>Région</th><th>Exploitations</th></tr></thead><tbody>{CAMEROON_REGIONS.map(region=>{const x=(adminOverview.regions||[]).find(item=>item.code===region.id);return <tr key={region.id}><td>{region.name}</td><td>{Number(x?.count||0).toLocaleString("fr-FR")}</td></tr>})}</tbody></table></div>
+          <h4 style={{color:GREEN,margin:"18px 0 8px"}}>Par département</h4>
+          <div style={styles.tableWrap}><table style={styles.table}><thead><tr><th>Département</th><th>Région</th><th>Exploitations</th></tr></thead><tbody>{CAMEROON_DEPARTMENTS.map(department=>{const x=(adminOverview.departments||[]).find(item=>item.code===department.id);return <tr key={department.id}><td>{department.name}</td><td>{geoLabel(department.region_id,CAMEROON_REGIONS)}</td><td>{Number(x?.count||0).toLocaleString("fr-FR")}</td></tr>})}</tbody></table></div>
+          <h4 style={{color:GREEN,margin:"18px 0 8px"}}>Par arrondissement</h4>
+          <div style={styles.tableWrap}><table style={styles.table}><thead><tr><th>Arrondissement</th><th>Département</th><th>Région</th><th>Exploitations</th></tr></thead><tbody>{(adminOverview.arrondissements||[]).map(x=><tr key={x.code||x.name}><td>{x.name}</td><td>{x.department||"—"}</td><td>{x.region||"—"}</td><td>{Number(x.count).toLocaleString("fr-FR")}</td></tr>)}</tbody></table></div>
+          <h4 style={{color:GREEN,margin:"18px 0 8px"}}>Par ville / village / localité</h4>
+          <div style={styles.tableWrap}><table style={styles.table}><thead><tr><th>Ville / localité</th><th>Arrondissement</th><th>Département</th><th>Région</th><th>Exploitations</th></tr></thead><tbody>{(adminOverview.localities||[]).map(x=><tr key={x.key}><td>{x.name}</td><td>{x.arrondissement||"—"}</td><td>{x.department||"—"}</td><td>{x.region||"—"}</td><td>{Number(x.count).toLocaleString("fr-FR")}</td></tr>)}</tbody></table></div>
+        </div>
+        <div style={styles.twoCols}>
+          <div style={styles.panel}><h3 style={styles.panelTitle}>Inscriptions par mois</h3>{(adminOverview.registrations_by_month||[]).length?(adminOverview.registrations_by_month||[]).map(x=><div key={x.month} style={styles.listRow}><span>{x.month}</span><b>{x.count}</b></div>):<Empty text="Aucune inscription à afficher."/>}</div>
+          <div style={styles.panel}><h3 style={styles.panelTitle}>Activités d’élevage déclarées</h3>{(adminOverview.species||[]).length?(adminOverview.species||[]).map(x=><div key={x.name} style={styles.listRow}><span>{speciesNames[x.name]||x.name}</span><b>{x.count}</b></div>):<Empty text="Aucune activité déclarée."/>}</div>
+        </div>
+        <div style={{...styles.panel,marginTop:14}}><b>Confidentialité et périmètre</b><p style={styles.muted}>Cet espace présente des statistiques globales. Il ne donne pas accès aux fiches privées des exploitations, aux noms des promoteurs, aux comptes employés ni à leurs finances. L’accès aux données détaillées reste limité par les règles de sécurité de chaque exploitation.</p></div>
+      </>}
+    </>;
     if (page === "suggestions" || page === "adminSuggestions") return <>
       <SectionTitle title={page==="adminSuggestions"?"Administration générale — retours utilisateurs":"Boîte à suggestions"} subtitle={isGlobalAdmin?"Vue globale des retours accessibles à l’administration GESTFARM. Les promoteurs ne voient que les retours de leurs exploitations.":isFarmOwner?"Tu consultes ici les suggestions envoyées par les membres de ton exploitation.":"Tes retours sont associés à ton compte et à l’exploitation sélectionnée."} action={<Button secondary onClick={loadSuggestions}><RefreshCw size={15}/> Actualiser</Button>}/>
       {page==="adminSuggestions" && isGlobalAdmin && <div style={{...styles.panel,marginBottom:14}}><b>Administration globale</b><p style={styles.muted}>Les retours sont identifiés par compte, rôle et exploitation. Les droits de lecture sont également contrôlés par Supabase.</p><Button secondary onClick={()=>{const body=suggestionRows.map(r=>`[${r.created_at?new Date(r.created_at).toLocaleDateString("fr-FR"):""}] ${r.farm_name||"Sans exploitation"} — ${r.author_name||r.user_email||"Utilisateur"} (${r.author_role||"user"})\n${r.subject}\n${r.message}\nStatut : ${r.status}\n`).join("\n---\n");window.location.href=`mailto:valery.yacinthe@gmail.com?subject=${encodeURIComponent("GESTFARM — synthèse des suggestions")}&body=${encodeURIComponent(body)}`;}}>Préparer un e-mail récapitulatif</Button></div>}
@@ -2029,9 +2113,40 @@ export default function App() {
 
   const modalContent = (() => {
     const farmSelect = <Field label="Fiche d’élevage concernée"><select style={inputStyle} value={form.cycle_id||""} onChange={e=>{set("cycle_id",e.target.value);set("group_id",farmGroups.find(g=>g.cycle_id===e.target.value)?.id||"");}} required><option value="">Choisir un élevage</option>{farmCycles.filter(c=>c.status==="active").map(c=><option key={c.id} value={c.id}>{speciesNames[c.species]||c.species} — {c.name}</option>)}</select></Field>;
-    if (modal==="farmEdit") return modalForm("Modifier l’exploitation",async e=>{e.preventDefault();setBusy(true);const {error}=await supabase.from("farms").update({name:form.name?.trim(),location:form.location?.trim()||null}).eq("id",activeFarm.id);if(error)setError(error.message);else{setModal("");setNotice("Informations de l’exploitation modifiées.");await loadAll();}setBusy(false);},<div style={styles.formGrid}><Field label="Nom de l’exploitation"><input style={inputStyle} value={form.name||""} onChange={e=>set("name",e.target.value)} required/></Field><Field label="Localisation (facultatif)"><input style={inputStyle} value={form.location||""} onChange={e=>set("location",e.target.value)}/></Field></div>);
+    if (modal==="farmEdit") return modalForm("Modifier l’exploitation",async e=>{
+      e.preventDefault();setBusy(true);
+      const region=CAMEROON_REGIONS.find(x=>x.id===form.region_code);
+      const department=CAMEROON_DEPARTMENTS.find(x=>x.id===form.department_code);
+      const arrondissement=CAMEROON_ARRONDISSEMENTS.find(x=>x.id===form.arrondissement_code);
+      if(!region||!department||!arrondissement||department.region_id!==region.id||arrondissement.department_id!==department.id){setError("Sélectionne correctement la région, le département et l’arrondissement.");setBusy(false);return;}
+      const locality=form.locality?.trim();if(!locality){setError("Indique la ville, le village ou la localité de l’exploitation.");setBusy(false);return;}
+      const location=[locality,arrondissement.name,department.name,region.name,"Cameroun"].filter(Boolean).join(", ");
+      const {error}=await supabase.from("farms").update({
+        name:form.name?.trim(),location,country_code:"CM",country_name:"Cameroun",
+        region_code:region.id,region:region.name,department_code:department.id,department:department.name,
+        arrondissement_code:arrondissement.id,arrondissement:arrondissement.name,locality,
+        research_consent:form.research_consent===true,research_consent_at:form.research_consent===true?(activeFarm.research_consent_at||new Date().toISOString()):null
+      }).eq("id",activeFarm.id);
+      if(error)setError(error.message);else{setModal("");setNotice("Informations de l’exploitation modifiées.");await loadAll();}
+      setBusy(false);
+    },<div style={{display:"grid",gap:12}}>
+      <Field label="Nom de l’exploitation"><input style={inputStyle} value={form.name||""} onChange={e=>set("name",e.target.value)} required/></Field>
+      <Field label="Pays"><select style={inputStyle} value="CM" disabled><option value="CM">Cameroun</option></select></Field>
+      <Field label="Région"><select style={inputStyle} value={form.region_code||""} onChange={e=>{set("region_code",e.target.value);set("department_code","");set("arrondissement_code","");}} required><option value="">Choisir une région</option>{CAMEROON_REGIONS.map(x=><option key={x.id} value={x.id}>{x.name}</option>)}</select></Field>
+      <Field label="Département"><select style={inputStyle} value={form.department_code||""} onChange={e=>{set("department_code",e.target.value);set("arrondissement_code","");}} required disabled={!form.region_code}><option value="">Choisir un département</option>{CAMEROON_DEPARTMENTS.filter(x=>x.region_id===form.region_code).map(x=><option key={x.id} value={x.id}>{x.name}</option>)}</select></Field>
+      <Field label="Arrondissement"><select style={inputStyle} value={form.arrondissement_code||""} onChange={e=>set("arrondissement_code",e.target.value)} required disabled={!form.department_code}><option value="">Choisir un arrondissement</option>{CAMEROON_ARRONDISSEMENTS.filter(x=>x.department_id===form.department_code).map(x=><option key={x.id} value={x.id}>{x.name}</option>)}</select></Field>
+      <Field label="Ville / village / localité"><input style={inputStyle} value={form.locality||""} onChange={e=>set("locality",e.target.value)} placeholder="Ex. Dschang, Fongo-Tongo, quartier…" required/></Field>
+      <label style={{display:"flex",gap:9,alignItems:"flex-start",fontSize:12,lineHeight:1.5,color:"#536258"}}><input type="checkbox" checked={!!form.research_consent} onChange={e=>set("research_consent",e.target.checked)} style={{marginTop:3}}/><span>J’accepte que la localisation de cette exploitation soit utilisée sous forme agrégée et anonymisée pour les statistiques de GESTFARM et les travaux de recherche annoncés. Cet accord est facultatif et peut être retiré.</span></label>
+    </div>);
     if (modal==="group") return modalForm(form.group_id?"Modifier la fiche d’élevage":"Ajouter une fiche d’élevage",saveGroup,<div style={{display:"grid",gap:12}}>
-      {!activeFarm&&<><p style={{fontSize:12,color:"#65736a",margin:0}}>Première utilisation : GESTFARM va créer automatiquement ton exploitation. Tu pourras préciser son nom ici.</p><Field label="Nom de l’exploitation (facultatif)"><input style={inputStyle} value={form.farm_name||""} onChange={e=>set("farm_name",e.target.value)} placeholder="Ex. Ferme familiale"/></Field><Field label="Localisation (facultatif)"><input style={inputStyle} value={form.location||""} onChange={e=>set("location",e.target.value)} placeholder="Village, ville…"/></Field></>}
+      {!activeFarm&&<><p style={{fontSize:12,color:"#65736a",margin:0}}>Première utilisation : indique la localisation administrative de ton exploitation. Ces informations permettront d’établir des statistiques géographiques nationales anonymisées.</p>
+        <Field label="Nom de l’exploitation (facultatif)"><input style={inputStyle} value={form.farm_name||""} onChange={e=>set("farm_name",e.target.value)} placeholder="Ex. Ferme familiale"/></Field>
+        <Field label="Pays"><select style={inputStyle} value="CM" disabled><option value="CM">Cameroun</option></select></Field>
+        <Field label="Région"><select style={inputStyle} value={form.region_code||""} onChange={e=>{set("region_code",e.target.value);set("department_code","");set("arrondissement_code","");}} required><option value="">Choisir une région</option>{CAMEROON_REGIONS.map(x=><option key={x.id} value={x.id}>{x.name}</option>)}</select></Field>
+        <Field label="Département"><select style={inputStyle} value={form.department_code||""} onChange={e=>{set("department_code",e.target.value);set("arrondissement_code","");}} required disabled={!form.region_code}><option value="">Choisir un département</option>{CAMEROON_DEPARTMENTS.filter(x=>x.region_id===form.region_code).map(x=><option key={x.id} value={x.id}>{x.name}</option>)}</select></Field>
+        <Field label="Arrondissement"><select style={inputStyle} value={form.arrondissement_code||""} onChange={e=>set("arrondissement_code",e.target.value)} required disabled={!form.department_code}><option value="">Choisir un arrondissement</option>{CAMEROON_ARRONDISSEMENTS.filter(x=>x.department_id===form.department_code).map(x=><option key={x.id} value={x.id}>{x.name}</option>)}</select></Field>
+        <Field label="Ville / village / localité"><input style={inputStyle} value={form.locality||""} onChange={e=>set("locality",e.target.value)} placeholder="Ex. Dschang, Fongo-Tongo, quartier…" required/></Field>
+        <label style={{display:"flex",gap:9,alignItems:"flex-start",fontSize:12,lineHeight:1.5,color:"#536258"}}><input type="checkbox" checked={!!form.research_consent} onChange={e=>set("research_consent",e.target.checked)} style={{marginTop:3}}/><span>J’accepte que la localisation de cette exploitation soit utilisée sous forme agrégée et anonymisée pour les statistiques de GESTFARM et les travaux de recherche annoncés. Cet accord est facultatif et peut être retiré.</span></label></>}
       <Field label="Nom de cette fiche d’élevage"><input style={inputStyle} value={form.name||""} onChange={e=>set("name",e.target.value)} required placeholder="Ex. Pondeuses – Bande A"/></Field>
       <Field label="Espèce élevée"><select style={inputStyle} value={form.species||"broilers"} onChange={e=>set("species",e.target.value)}>{Object.entries(speciesNames).map(([v,l])=><option value={v} key={v}>{l}</option>)}</select></Field>
       <Field label="Bâtiment / emplacement (facultatif)"><input style={inputStyle} value={form.building_name||""} onChange={e=>set("building_name",e.target.value)} placeholder="Ex. Bâtiment A, poulailler 2, clapier…"/></Field>
