@@ -267,6 +267,10 @@ export default function App() {
   const [syncBusy, setSyncBusy] = useState(false);
   const [failedOfflineCount, setFailedOfflineCount] = useState(0);
   const [failedOfflineMsg, setFailedOfflineMsg] = useState("");
+  const [updateSafetyOpen, setUpdateSafetyOpen] = useState(false);
+  const [updateSafetyBusy, setUpdateSafetyBusy] = useState(false);
+  const [updateSafetyReady, setUpdateSafetyReady] = useState(false);
+  const [updateSafetyMessage, setUpdateSafetyMessage] = useState("");
 
   const set = (key, value) => setForm((old) => ({ ...old, [key]: value }));
   const activeFarm = farms.find((f) => f.id === (selectedFarm || farms[0]?.id));
@@ -416,6 +420,43 @@ export default function App() {
       if (synced) await loadAll();
     } catch(e) { console.warn("Synchronisation différée",e); }
     finally { syncInFlightRef.current = false; setSyncBusy(false); }
+  }
+  async function openUpdateSafetyCheck() {
+    setUpdateSafetyOpen(true);
+    setUpdateSafetyReady(false);
+    setUpdateSafetyMessage("");
+    const userId = session?.user?.id;
+    if (!userId) {
+      setUpdateSafetyMessage("Connecte-toi à ton compte GESTFARM pour vérifier tes données.");
+      return;
+    }
+    if (!navigator.onLine) {
+      setUpdateSafetyMessage("Connexion Internet nécessaire. Tes saisies locales restent sur cet appareil : ne désinstalle pas GESTFARM et ne lance pas de mise à jour.");
+      return;
+    }
+    if (syncInFlightRef.current) {
+      setUpdateSafetyMessage("Une synchronisation est déjà en cours. Attends sa fin, puis relance cette vérification.");
+      return;
+    }
+    setUpdateSafetyBusy(true);
+    try {
+      await syncOfflineQueue();
+      const remaining = await gestfarmGetQueue(userId);
+      await refreshPendingCount(userId);
+      if (remaining.length === 0) {
+        setUpdateSafetyReady(true);
+        setUpdateSafetyMessage("Toutes les saisies hors connexion sont synchronisées. Tu peux maintenant poursuivre la procédure de mise à jour. Garde toutefois l’application installée jusqu’à ce que la nouvelle version soit correctement installée.");
+      } else {
+        const failed = remaining.filter(item => item.error).length;
+        setUpdateSafetyMessage(failed
+          ? String(remaining.length) + " saisie(s) restent sur cet appareil, dont " + String(failed) + " en échec. La mise à jour ou la réinstallation n’est pas autorisée par cette vérification. Corrige les erreurs et réessaie."
+          : String(remaining.length) + " saisie(s) sont encore en attente. Attends la synchronisation complète avant toute mise à jour ou réinstallation.");
+      }
+    } catch (e) {
+      setUpdateSafetyMessage("Impossible de vérifier la synchronisation. Ne désinstalle pas GESTFARM. Réessaie lorsque la connexion sera stable.");
+    } finally {
+      setUpdateSafetyBusy(false);
+    }
   }
   // Affiche immédiatement, sans doublon, les éléments encore en attente d'envoi.
   function mergePendingState(setter, rows) {
@@ -2379,12 +2420,32 @@ export default function App() {
           {!isOnline&&<span>Tu peux créer des élevages, cycles et fiches, saisir le suivi technique, les finances, les tâches, les absences et les ventes. Les stocks, la reproduction et la gestion de l’équipe nécessitent encore Internet.</span>}
           {isOnline&&pendingOfflineCount>0&&<button type="button" onClick={syncOfflineQueue} style={{border:0,background:"transparent",color:ACCENT,textDecoration:"underline",cursor:"pointer",fontWeight:700}}>Synchroniser</button>}
           {offlineDataLoaded&&<span> · Copie locale consultée</span>}
+          <button type="button" onClick={openUpdateSafetyCheck} style={{border:0,borderRadius:7,padding:"6px 9px",background:"#e7efe9",color:GREEN,cursor:"pointer",fontWeight:700,fontSize:11}}>Préparer une mise à jour</button>
         </div>
         {busy && <div style={styles.loading}>Chargement des données…</div>}
         {renderContent()}
         <footer style={styles.footer}>GESTFARM by kenfack sobtia · Gestion et suivi des exploitations d’élevage · <button type="button" onClick={()=>setPrivacyOpen(true)} style={styles.footerLink}>Confidentialité</button></footer>
       </div>
     </main>
+    {updateSafetyOpen && <div style={styles.overlay}>
+      <section role="dialog" aria-modal="true" aria-labelledby="update-safety-title" className="gf-modal" style={styles.modal}>
+        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
+          <RefreshCw size={22} color={GREEN}/>
+          <h2 id="update-safety-title" style={{color:GREEN,margin:0,fontSize:19}}>Protection des données avant mise à jour</h2>
+        </div>
+        <p style={{fontSize:13,lineHeight:1.6,color:"#53645a"}}>GESTFARM vérifie les saisies enregistrées hors connexion et tente de les envoyer vers ton compte. Une mise à jour ou une désinstallation ne doit jamais être faite tant qu’une saisie reste en attente ou en échec.</p>
+        <div style={{padding:12,borderRadius:9,background:updateSafetyReady?"#edf7ef":"#fff5e8",color:updateSafetyReady?GREEN:"#875315",fontSize:13,lineHeight:1.6,marginBottom:14}}>
+          <b>{updateSafetyBusy?"Synchronisation et vérification…":updateSafetyReady?"Vérification réussie":"Vérification nécessaire"}</b>
+          {updateSafetyMessage&&<div style={{marginTop:6}}>{updateSafetyMessage}</div>}
+          {!updateSafetyMessage&&!updateSafetyBusy&&<div style={{marginTop:6}}>Lance la vérification pour contrôler toutes les saisies locales de ton compte.</div>}
+        </div>
+        <p style={{fontSize:11,lineHeight:1.5,color:"#7b887f"}}>Important : cette protection accompagne la procédure dans GESTFARM. Android ne permet pas à l’application d’empêcher une désinstallation déclenchée directement depuis les paramètres du téléphone. En cas de données non synchronisées, ne désinstalle pas l’application.</p>
+        <div style={{display:"flex",justifyContent:"flex-end",gap:9,flexWrap:"wrap",marginTop:16}}>
+          <button type="button" onClick={()=>setUpdateSafetyOpen(false)} style={styles.linkButton}>Fermer</button>
+          <button type="button" disabled={updateSafetyBusy} onClick={openUpdateSafetyCheck} style={{border:0,borderRadius:8,padding:"10px 14px",background:updateSafetyBusy?"#9aaa9f":GREEN,color:"#fff",fontWeight:700,cursor:updateSafetyBusy?"wait":"pointer"}}>{updateSafetyBusy?"Vérification…":"Vérifier et synchroniser"}</button>
+        </div>
+      </section>
+    </div>}
     {printItem && <div className="gf-print-sheet">
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",borderBottom:"2px solid #174d35",paddingBottom:12,marginBottom:18}}>
         <div><h1 style={{margin:0}}>GESTFARM</h1><div>Fiche zootechnique individuelle — {printItem.species}</div></div>
