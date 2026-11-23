@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   LayoutDashboard, Tractor, ClipboardList, Wallet, Package, BarChart3,
-  Users, ClipboardCheck, Menu, X, LogOut, Plus, RefreshCw, Search,
+  Users, ClipboardCheck, Menu, X, LogOut, Plus, RefreshCw, Search, MapPin,
   AlertCircle, CheckCircle2, Trash2, CalendarDays, Activity, MessageSquare, MailCheck, Settings
 } from "lucide-react";
 import { supabase } from "./supabase";
@@ -573,12 +573,12 @@ export default function App() {
   function exportAdminResearchData() {
     if (!adminOverview) return;
     const rows = [["Type","Niveau","Localisation","Nombre d'exploitations"]];
-    (adminOverview.regions || []).forEach(x => rows.push(["Répartition géographique","Région",x.name,x.count]));
-    (adminOverview.departments || []).forEach(x => rows.push(["Répartition géographique","Département",x.name,x.count]));
+    CAMEROON_REGIONS.forEach(region => { const x=(adminOverview.regions||[]).find(item=>item.code===region.id); rows.push(["Répartition géographique","Région",region.name,x?.count||0]); });
+    CAMEROON_DEPARTMENTS.forEach(department => { const x=(adminOverview.departments||[]).find(item=>item.code===department.id); rows.push(["Répartition géographique","Département",department.name,x?.count||0]); });
     (adminOverview.arrondissements || []).forEach(x => rows.push(["Répartition géographique","Arrondissement",x.name,x.count]));
     (adminOverview.registrations_by_month || []).forEach(x => rows.push(["Inscriptions","Mois",x.month,x.count]));
     (adminOverview.species || []).forEach(x => rows.push(["Activités","Espèce",x.name,x.count]));
-    const csv = rows.map(row => row.map(value => '"' + String(value ?? "").replace(/"/g,'""') + '"').join(";")).join("\\r\\n");
+    const csv = rows.map(row => row.map(value => '"' + String(value ?? "").replace(/"/g,'""') + '"').join(";")).join("\r\n");
     const blob = new Blob(["\\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob); const link = document.createElement("a");
     link.href = url; link.download = "GESTFARM_donnees_agregees_recherche.csv"; link.click(); URL.revokeObjectURL(url);
@@ -2064,15 +2064,15 @@ export default function App() {
             <Card title="À compléter" value={Number(adminOverview.farms_location_missing||0).toLocaleString("fr-FR")} hint="Exploitations sans localisation complète" icon={AlertCircle}/>
           </div>
           <h4 style={{color:GREEN,margin:"18px 0 8px"}}>Par région</h4>
-          <div style={styles.tableWrap}><table style={styles.table}><thead><tr><th>Région</th><th>Exploitations</th></tr></thead><tbody>{(adminOverview.regions||[]).map(x=><tr key={x.code||x.name}><td>{x.name}</td><td>{Number(x.count).toLocaleString("fr-FR")}</td></tr>)}</tbody></table></div>
+          <div style={styles.tableWrap}><table style={styles.table}><thead><tr><th>Région</th><th>Exploitations</th></tr></thead><tbody>{CAMEROON_REGIONS.map(region=>{const x=(adminOverview.regions||[]).find(item=>item.code===region.id);return <tr key={region.id}><td>{region.name}</td><td>{Number(x?.count||0).toLocaleString("fr-FR")}</td></tr>})}</tbody></table></div>
           <h4 style={{color:GREEN,margin:"18px 0 8px"}}>Par département</h4>
-          <div style={styles.tableWrap}><table style={styles.table}><thead><tr><th>Département</th><th>Région</th><th>Exploitations</th></tr></thead><tbody>{(adminOverview.departments||[]).map(x=><tr key={x.code||x.name}><td>{x.name}</td><td>{x.region||"—"}</td><td>{Number(x.count).toLocaleString("fr-FR")}</td></tr>)}</tbody></table></div>
+          <div style={styles.tableWrap}><table style={styles.table}><thead><tr><th>Département</th><th>Région</th><th>Exploitations</th></tr></thead><tbody>{CAMEROON_DEPARTMENTS.map(department=>{const x=(adminOverview.departments||[]).find(item=>item.code===department.id);return <tr key={department.id}><td>{department.name}</td><td>{geoLabel(department.region_id,CAMEROON_REGIONS)}</td><td>{Number(x?.count||0).toLocaleString("fr-FR")}</td></tr>})}</tbody></table></div>
           <h4 style={{color:GREEN,margin:"18px 0 8px"}}>Par arrondissement</h4>
           <div style={styles.tableWrap}><table style={styles.table}><thead><tr><th>Arrondissement</th><th>Département</th><th>Région</th><th>Exploitations</th></tr></thead><tbody>{(adminOverview.arrondissements||[]).map(x=><tr key={x.code||x.name}><td>{x.name}</td><td>{x.department||"—"}</td><td>{x.region||"—"}</td><td>{Number(x.count).toLocaleString("fr-FR")}</td></tr>)}</tbody></table></div>
         </div>
         <div style={styles.twoCols}>
-          <div style={styles.panel}><h3 style={styles.panelTitle}>Inscriptions par mois</h3>{(adminOverview.registrations_by_month||[]).length?(adminOverview.registrations_by_month||[]).map(x=><div key={x.month} style={styles.listRow}><span>{x.month}</span><b>{x.count}</b></div>):<Empty text="Aucune inscription à afficher."/ >}</div>
-          <div style={styles.panel}><h3 style={styles.panelTitle}>Activités d’élevage déclarées</h3>{(adminOverview.species||[]).length?(adminOverview.species||[]).map(x=><div key={x.name} style={styles.listRow}><span>{speciesNames[x.name]||x.name}</span><b>{x.count}</b></div>):<Empty text="Aucune activité déclarée."/ >}</div>
+          <div style={styles.panel}><h3 style={styles.panelTitle}>Inscriptions par mois</h3>{(adminOverview.registrations_by_month||[]).length?(adminOverview.registrations_by_month||[]).map(x=><div key={x.month} style={styles.listRow}><span>{x.month}</span><b>{x.count}</b></div>):<Empty text="Aucune inscription à afficher."/>}</div>
+          <div style={styles.panel}><h3 style={styles.panelTitle}>Activités d’élevage déclarées</h3>{(adminOverview.species||[]).length?(adminOverview.species||[]).map(x=><div key={x.name} style={styles.listRow}><span>{speciesNames[x.name]||x.name}</span><b>{x.count}</b></div>):<Empty text="Aucune activité déclarée."/>}</div>
         </div>
         <div style={{...styles.panel,marginTop:14}}><b>Confidentialité et périmètre</b><p style={styles.muted}>Cet espace présente des statistiques globales. Il ne donne pas accès aux fiches privées des exploitations, aux noms des promoteurs, aux comptes employés ni à leurs finances. L’accès aux données détaillées reste limité par les règles de sécurité de chaque exploitation.</p></div>
       </>}
