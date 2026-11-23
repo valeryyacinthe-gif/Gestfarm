@@ -1484,9 +1484,16 @@ export default function App() {
   async function saveMember(e) {
     e.preventDefault(); setBusy(true); setError("");
     const permissions = form.permissions || permissionsForRole(form.role || "employee");
+    const existingMember = form.member_id ? members.find(m => m.id === form.member_id) : null;
+    const memberIsActive = form.member_id ? form.is_active !== false : true;
+    const memberStatus = !memberIsActive
+      ? "inactive"
+      : form.status === "inactive"
+        ? (existingMember?.user_id ? "active" : "pending")
+        : (form.status || "pending");
     const payload = { farm_id: activeFarm.id, email: form.email.trim().toLowerCase(), full_name: form.full_name?.trim() || null, role: form.role || "employee", permissions, status: "pending", is_active: true };
     const request = form.member_id
-      ? supabase.from("farm_members").update({ full_name: payload.full_name, role: payload.role, permissions: payload.permissions, is_active: form.is_active !== false, status: form.is_active === false ? "inactive" : (form.status || "pending"), updated_at: new Date().toISOString() }).eq("id", form.member_id)
+      ? supabase.from("farm_members").update({ full_name: payload.full_name, role: payload.role, permissions: payload.permissions, is_active: memberIsActive, status: memberStatus, updated_at: new Date().toISOString() }).eq("id", form.member_id)
       : supabase.from("farm_members").insert(payload);
     const { error } = await request;
     if (error) setError(error.message);
