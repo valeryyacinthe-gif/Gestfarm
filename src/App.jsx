@@ -1890,14 +1890,14 @@ export default function App() {
       </div>
     </>;
     if (page === "farms") return <>
-      <SectionTitle title="Mes exploitations" subtitle="Crée ou sélectionne d’abord le site sur lequel tu souhaites travailler." action={isFarmOwner||!activeFarm?<Button onClick={()=>openModal("farmCreate",{name:"",research_consent:false})}><Plus size={16}/> Ajouter une exploitation</Button>:null}/>
+      <SectionTitle title="Mes exploitations" subtitle="Crée ou sélectionne d’abord le site sur lequel tu souhaites travailler." action={<Button onClick={()=>openModal("farmCreate",{name:"",research_consent:false})}><Plus size={16}/> Ajouter une exploitation</Button>}/>
       <div style={{...styles.panel,marginBottom:16,border:"1px solid #dce8df"}}>
         {farms.length>0 ? <><Field label="Exploitation / site actif"><select style={inputStyle} value={activeFarm?.id||""} onChange={e=>setSelectedFarm(e.target.value)}>{farms.map(f=><option key={f.id} value={f.id}>{f.name} — {f.owner_id===session.user.id?"Mon exploitation":"Espace invité"}</option>)}</select></Field>
           {activeFarm&&<div style={{fontSize:12,color:"#718077",marginTop:8}}>{activeFarm.location||"Localisation non précisée"}</div>}
           {activeFarm?.owner_id===session.user.id&&<div style={{display:"flex",gap:8,flexWrap:"wrap",marginTop:12}}><Button secondary onClick={()=>openModal("farmEdit",{name:activeFarm.name,location:activeFarm.location||"",region_code:activeFarm.region_code||"",department_code:activeFarm.department_code||"",arrondissement_code:activeFarm.arrondissement_code||"",locality:activeFarm.locality||"",research_consent:activeFarm.research_consent===true})}>Modifier l’exploitation</Button><Button secondary onClick={()=>openModal("farmCreate",{name:"",research_consent:false})}><Plus size={14}/> Ajouter un autre site</Button></div>}
         </> : <><b style={{color:GREEN}}>Étape 1 — Enregistrer mon exploitation</b><p style={styles.muted}>Aucune exploitation n’est encore enregistrée. Commence par créer ton exploitation ; tu pourras ensuite y rattacher tes élevages.</p><Button onClick={()=>openModal("farmCreate",{name:"",research_consent:false})}><Plus size={16}/> Créer mon exploitation</Button></>}
       </div>
-      <SectionTitle title="Mes élevages" subtitle={activeFarm?\`Élevages rattachés à : \${activeFarm.name}\`:"Sélectionne ou crée une exploitation pour commencer."} action={activeFarm&&canCreateElevages?<Button onClick={() => openModal("group", { species: "broilers", date: today(), count: "" })}><Plus size={16}/> Ajouter un élevage</Button>:null}/>
+      <SectionTitle title="Mes élevages" subtitle={activeFarm?`Élevages rattachés à : ${activeFarm.name}`:"Sélectionne ou crée une exploitation pour commencer."} action={activeFarm&&canCreateElevages?<Button onClick={() => openModal("group", { species: "broilers", date: today(), count: "" })}><Plus size={16}/> Ajouter un élevage</Button>:null}/>
       {!activeFarm ? <div style={styles.panel}><Empty text="Après l’enregistrement de ton exploitation, tes élevages apparaîtront ici."/></div> : <>
         {farmGroups.length ? <div style={styles.cardsGrid}>{farmGroups.map(g=>{
           const cycle=farmCycles.find(c=>c.id===g.cycle_id);
