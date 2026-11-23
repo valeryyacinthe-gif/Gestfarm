@@ -1768,7 +1768,7 @@ export default function App() {
   if (recoveryMode) return <div style={styles.authPage}>
     <form onSubmit={finishPasswordRecovery} style={styles.authCard}>
       <div style={{ textAlign: "center", marginBottom: 24 }}>
-        <img src={GESTFARM_LOGO} alt="GESTFARM by Kenfack Sobtia" style={{ width: "min(100%, 310px)", height: "auto", objectFit: "contain", margin: "0 auto 8px" }}/>
+        <img src={GESTFARM_LOGO} alt="GESTFARM by KS" style={{ width: "min(100%, 310px)", height: "auto", objectFit: "contain", margin: "0 auto 8px" }}/>
         <div style={{ color: "#718077", fontSize: 12 }}>Réinitialisation du mot de passe</div>
         <p style={{ color: "#66746b", fontSize: 13, marginTop: 18 }}>Choisis un nouveau mot de passe personnel pour sécuriser ton compte.</p>
       </div>
@@ -1784,7 +1784,7 @@ export default function App() {
   if (inviteSetup && session) return <div style={styles.authPage}>
     <form onSubmit={finishInvite} style={styles.authCard}>
       <div style={{ textAlign: "center", marginBottom: 24 }}>
-        <img src={GESTFARM_LOGO} alt="GESTFARM by Kenfack Sobtia" style={{ width: "min(100%, 310px)", height: "auto", objectFit: "contain", margin: "0 auto 8px" }}/>
+        <img src={GESTFARM_LOGO} alt="GESTFARM by KS" style={{ width: "min(100%, 310px)", height: "auto", objectFit: "contain", margin: "0 auto 8px" }}/>
         <div style={{ color: "#718077", fontSize: 12 }}>Activation du compte employé</div>
         <p style={{ color: "#66746b", fontSize: 13, marginTop: 18 }}>Bienvenue ! Choisis maintenant ton mot de passe personnel.</p>
       </div>
@@ -1800,7 +1800,7 @@ export default function App() {
   if (!session) return <div style={styles.authPage}>
     <form onSubmit={authMode === "recovery" ? sendPasswordRecovery : authMode === "login" ? signIn : signUp} style={styles.authCard}>
       <div style={{ textAlign: "center", marginBottom: 24 }}>
-        <img src={GESTFARM_LOGO} alt="GESTFARM by Kenfack Sobtia" style={{ width: "min(100%, 310px)", height: "auto", objectFit: "contain", margin: "0 auto 8px" }}/>
+        <img src={GESTFARM_LOGO} alt="GESTFARM by KS" style={{ width: "min(100%, 310px)", height: "auto", objectFit: "contain", margin: "0 auto 8px" }}/>
         <p style={{ color: "#66746b", fontSize: 13, marginTop: 18 }}>
           {authMode === "login" ? "Connecte-toi à ton espace de gestion." : authMode === "signup" ? "Crée ton compte GESTFARM." : "Saisis ton adresse e-mail pour recevoir un lien de réinitialisation."}
         </p>
@@ -2382,7 +2382,7 @@ export default function App() {
         </div>
         {busy && <div style={styles.loading}>Chargement des données…</div>}
         {renderContent()}
-        <footer style={styles.footer}>GESTFARM by kenfack sobtia · Gestion et suivi des exploitations d’élevage · <button type="button" onClick={()=>setPrivacyOpen(true)} style={styles.footerLink}>Confidentialité</button></footer>
+        <footer style={styles.footer}>GESTFARM by KS · Gestion et suivi des exploitations d’élevage · <button type="button" onClick={()=>setPrivacyOpen(true)} style={styles.footerLink}>Confidentialité</button></footer>
       </div>
     </main>
     {printItem && <div className="gf-print-sheet">
@@ -2403,7 +2403,7 @@ export default function App() {
       </tbody></table>}
       <h2 style={{marginTop:24}}>Historique des événements</h2>
       {printItem.history?.length?<table><thead><tr><th>Date</th><th>Événement</th><th>Résultat / données</th><th>Produit / notes</th></tr></thead><tbody>{printItem.history.map(ev=><tr key={ev.id}><td>{dateLabel(ev.event_date)}</td><td>{ev.event_type}</td><td>{[ev.kits_total!=null?`${ev.kits_total} nés`:null,ev.kits_alive!=null?`${ev.kits_alive} vivants`:null,ev.piglets_total!=null?`${ev.piglets_total} porcelets nés`:null,ev.piglets_alive!=null?`${ev.piglets_alive} vivants`:null,ev.weight_kg?`${ev.weight_kg} kg`:null,ev.pregnancy_result].filter(Boolean).join(" · ")||"—"}</td><td>{[ev.product_name,ev.dosage,ev.reason,ev.notes,ev.outcome].filter(Boolean).join(" · ")||"—"}</td></tr>)}</tbody></table>:<p>Aucun événement enregistré.</p>}
-      <div style={{marginTop:30,fontSize:10,color:"#555"}}>GESTFARM by Kenfack Sobtia — Document issu des données enregistrées dans l’application.</div>
+      <div style={{marginTop:30,fontSize:10,color:"#555"}}>GESTFARM by KS — Document issu des données enregistrées dans l’application.</div>
     </div>}
     {modalContent}
     {privacyOpen && <div style={styles.overlay} onClick={()=>setPrivacyOpen(false)}><section role="dialog" aria-modal="true" aria-label="Politique de confidentialité" className="gf-modal" style={{ ...styles.modal, maxHeight:"85vh", overflowY:"auto" }} onClick={e=>e.stopPropagation()}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:12}}><h2 style={{color:GREEN,margin:0}}>Politique de confidentialité</h2><button onClick={()=>setPrivacyOpen(false)} style={styles.iconButton} aria-label="Fermer"><X size={19}/></button></div><PrivacyText/><Button onClick={()=>setPrivacyOpen(false)}>Fermer</Button></section></div>}
