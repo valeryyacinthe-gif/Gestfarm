@@ -1776,10 +1776,12 @@ export default function App() {
         <p style={{fontSize:13,margin:"0 0 18px"}}>{session?.user?.email || "Adresse e-mail indisponible"}</p>
         <h3 style={styles.panelTitle}>Interface de cet espace de travail</h3>
         <p style={{fontSize:13,lineHeight:1.6,color:"#536258"}}>Ce choix adapte les menus de ton espace personnel actif. Dans une exploitation dont tu es membre, l’interface Entreprise s’affiche automatiquement ; les autorisations restent définies par le promoteur.</p>
-        <div style={{display:"flex",gap:9,flexWrap:"wrap",marginBottom:20}}>
-          <Button secondary disabled={workspaceBusy || workspaceMode === "individual"} onClick={()=>saveWorkspaceMode("individual")}>Éleveur individuel</Button>
-          <Button secondary disabled={workspaceBusy || workspaceMode === "enterprise"} onClick={()=>saveWorkspaceMode("enterprise")}>Entreprise / exploitation professionnelle</Button>
-        </div>
+        {activeFarm && activeFarm.owner_id !== session?.user?.id
+          ? <p style={{fontSize:13,lineHeight:1.6,color:"#536258",marginBottom:20}}>Tu travailles actuellement dans une exploitation gérée par un autre promoteur. L’interface Entreprise s’applique automatiquement dans cet espace. Pour modifier ton interface personnelle, sélectionne une exploitation dont tu es propriétaire.</p>
+          : <div style={{display:"flex",gap:9,flexWrap:"wrap",marginBottom:20}}>
+              <Button secondary disabled={workspaceBusy || workspaceMode === "individual"} onClick={()=>saveWorkspaceMode("individual")}>Éleveur individuel</Button>
+              <Button secondary disabled={workspaceBusy || workspaceMode === "enterprise"} onClick={()=>saveWorkspaceMode("enterprise")}>Entreprise / exploitation professionnelle</Button>
+            </div>}
         <h3 style={styles.panelTitle}>Suppression définitive de l’entreprise</h3>
         <p style={{fontSize:13,lineHeight:1.65,color:"#536258"}}>Cette action supprime toutes les exploitations appartenant à ce compte et leurs données de production, reproducteurs, stocks, ventes, finances, historiques et suggestions. Les comptes personnels des employés ne sont jamais supprimés par cette opération ; seuls leurs rattachements à ces exploitations disparaissent.</p>
         <p style={{fontSize:13,lineHeight:1.65,color:"#536258"}}>Si un employé utilise aussi son compte dans une autre entreprise GESTFARM, son compte personnel sera conservé pour ne pas lui supprimer l’accès à cette autre entreprise ; son rattachement à ton entreprise sera supprimé.</p>
