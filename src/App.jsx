@@ -175,6 +175,9 @@ function PrivacyText() {
 export default function App() {
   const syncInFlightRef = useRef(false);
   const [session, setSession] = useState(null);
+  const [workspaceMode, setWorkspaceMode] = useState("enterprise");
+  const [workspaceChoiceOpen, setWorkspaceChoiceOpen] = useState(false);
+  const [workspaceBusy, setWorkspaceBusy] = useState(false);
   const [authMode, setAuthMode] = useState("login");
   const [recoveryMode, setRecoveryMode] = useState(false);
   const [recoveryPassword, setRecoveryPassword] = useState("");
@@ -309,6 +312,18 @@ export default function App() {
     return () => listener.subscription.unsubscribe();
   }, []);
 
+  useEffect(() => {
+    if (!session?.user?.id) { setWorkspaceChoiceOpen(false); return; }
+    const savedMode = session.user.user_metadata?.gestfarm_workspace_mode;
+    if (savedMode === "individual" || savedMode === "enterprise") {
+      setWorkspaceMode(savedMode);
+      setWorkspaceChoiceOpen(false);
+    } else {
+      // Les anciens comptes choisissent leur interface sans modifier leurs données ni leurs droits.
+      setWorkspaceMode("enterprise");
+      setWorkspaceChoiceOpen(true);
+    }
+  }, [session?.user?.id, session?.user?.user_metadata?.gestfarm_workspace_mode]);
   useEffect(() => { if (session?.user) loadAll(); }, [session?.user?.id]);
   useEffect(() => { if (session?.user?.id && (page === "suggestions" || page === "adminSuggestions")) loadSuggestions(); }, [session?.user?.id, page]);
   useEffect(() => {
@@ -732,6 +747,22 @@ export default function App() {
     }
     setAuthBusy(false);
   }
+  async function saveWorkspaceMode(mode) {
+    if (!session?.user || !["individual", "enterprise"].includes(mode)) return;
+    setWorkspaceBusy(true); setError(""); setNotice("");
+    const { data, error } = await supabase.auth.updateUser({ data: { gestfarm_workspace_mode: mode } });
+    if (error) {
+      setError("Impossible d’enregistrer le mode d’interface : " + error.message);
+    } else {
+      setWorkspaceMode(mode);
+      setWorkspaceChoiceOpen(false);
+      if (mode === "individual" && (page === "team" || page === "tasks")) setPage("dashboard");
+      if (data?.user) setSession(current => current ? { ...current, user: data.user } : current);
+      setNotice(mode === "individual" ? "Interface Éleveur individuel activée." : "Interface Entreprise activée. Toutes les fonctionnalités autorisées sont conservées.");
+    }
+    setWorkspaceBusy(false);
+  }
+
   async function sendMemberInvite(member) {
     if (!activeFarm) return;
     setBusy(true); setError(""); setNotice("");
@@ -1573,6 +1604,8 @@ export default function App() {
   const canConsumeAllocatedStock = isFarmOwner || !!currentFarmMember?.permissions?.stocks?.create || !!currentFarmMember?.permissions?.suivi?.create;
   const moduleForPage = { farms:"elevages", technical:"suivi", breeders:"suivi", rabbits:"suivi", pigs:"suivi", finance:"finances", sales:"sales", stocks:"stocks", team:"equipe", tasks:"equipe", activity:"historique" };
   const visibleNav = nav.filter(([id]) => {
+    // Le mode individuel simplifie uniquement la navigation ; les permissions serveur restent inchangées.
+    if (workspaceMode === "individual" && (id === "team" || id === "tasks")) return false;
     if (id === "adminSuggestions") return isGlobalAdmin;
     if (id === "account") return true;
     if (!activeFarm || isFarmOwner || id === "suggestions") return true;
@@ -1720,6 +1753,12 @@ export default function App() {
       <div style={styles.panel}>
         <h3 style={styles.panelTitle}>Compte connecté</h3>
         <p style={{fontSize:13,margin:"0 0 18px"}}>{session?.user?.email || "Adresse e-mail indisponible"}</p>
+        <h3 style={styles.panelTitle}>Mon interface de travail</h3>
+        <p style={{fontSize:13,lineHeight:1.6,color:"#536258"}}>Ce choix adapte les menus à ton organisation. Il ne modifie ni tes exploitations, ni tes données, ni les autorisations attribuées par les promoteurs.</p>
+        <div style={{display:"flex",gap:9,flexWrap:"wrap",marginBottom:20}}>
+          <Button secondary disabled={workspaceBusy || workspaceMode === "individual"} onClick={()=>saveWorkspaceMode("individual")}>Éleveur individuel</Button>
+          <Button secondary disabled={workspaceBusy || workspaceMode === "enterprise"} onClick={()=>saveWorkspaceMode("enterprise")}>Entreprise / exploitation professionnelle</Button>
+        </div>
         <h3 style={styles.panelTitle}>Suppression définitive de l’entreprise</h3>
         <p style={{fontSize:13,lineHeight:1.65,color:"#536258"}}>Cette action supprime toutes les exploitations appartenant à ce compte et leurs données de production, reproducteurs, stocks, ventes, finances, historiques et suggestions. Les comptes personnels des employés ne sont jamais supprimés par cette opération ; seuls leurs rattachements à ces exploitations disparaissent.</p>
         <p style={{fontSize:13,lineHeight:1.65,color:"#536258"}}>Si un employé utilise aussi son compte dans une autre entreprise GESTFARM, son compte personnel sera conservé pour ne pas lui supprimer l’accès à cette autre entreprise ; son rattachement à ton entreprise sera supprimé.</p>
@@ -2105,6 +2144,27 @@ export default function App() {
         <select aria-label="Élevage actif" value={activeFarm?.id||""} onChange={e=>setSelectedFarm(e.target.value)} style={{...inputStyle,width:"auto",maxWidth:190}}><option value="">Tous les élevages</option>{farms.map(f=><option key={f.id} value={f.id}>{f.name}</option>)}</select>
       </header>
       <div className="gf-content" style={styles.content}>
+        {workspaceChoiceOpen && <div style={styles.overlay}>
+          <section role="dialog" aria-modal="true" aria-labelledby="workspace-choice-title" className="gf-modal" style={{...styles.modal,width:"min(100%,680px)"}}>
+            <div style={{textAlign:"center",marginBottom:18}}>
+              <h2 id="workspace-choice-title" style={{color:GREEN,margin:"0 0 8px"}}>Bienvenue sur GESTFARM</h2>
+              <p style={{fontSize:14,lineHeight:1.6,color:"#5c6b61",margin:0}}>Choisis l’interface qui correspond à ton activité. Tu pourras modifier ce choix plus tard dans « Compte et suppression ».</p>
+            </div>
+            <div style={styles.cardsGrid}>
+              <div style={{border:"1px solid #dce8df",borderRadius:13,padding:16,display:"grid",gap:10}}>
+                <div style={{fontSize:28}}>🐓</div><h3 style={{color:GREEN,margin:0}}>Éleveur individuel</h3>
+                <p style={{fontSize:13,lineHeight:1.55,color:"#5c6b61",margin:0}}>Une interface claire pour gérer tes élevages, tes animaux, tes reproducteurs, la reproduction, la santé, l’alimentation, les stocks, les finances, ton journal et tes rapports imprimables.</p>
+                <Button disabled={workspaceBusy} onClick={()=>saveWorkspaceMode("individual")}>{workspaceBusy?"Enregistrement…":"Choisir cette interface"}</Button>
+              </div>
+              <div style={{border:"1px solid #dce8df",borderRadius:13,padding:16,display:"grid",gap:10}}>
+                <div style={{fontSize:28}}>🏢</div><h3 style={{color:GREEN,margin:0}}>Entreprise / exploitation professionnelle</h3>
+                <p style={{fontSize:13,lineHeight:1.55,color:"#5c6b61",margin:0}}>L’espace complet de GESTFARM : élevages, reproducteurs, finances, stocks, équipes, invitations, rôles, tâches, absences, journal et rapports multi-exploitations.</p>
+                <Button disabled={workspaceBusy} onClick={()=>saveWorkspaceMode("enterprise")}>{workspaceBusy?"Enregistrement…":"Choisir cette interface"}</Button>
+              </div>
+            </div>
+            <p style={{fontSize:11,color:"#7b887f",lineHeight:1.5,margin:"14px 0 0"}}>Le mode choisi ne donne aucun droit supplémentaire : les accès aux exploitations restent contrôlés par les autorisations du compte et de chaque promoteur.</p>
+          </section>
+        </div>}
         {error && <div style={styles.errorBanner}><AlertCircle size={17}/>{error}<button onClick={()=>setError("")} style={styles.dismiss}>×</button></div>}
         {notice && <div style={styles.successBanner}><CheckCircle2 size={17}/>{notice}<button onClick={()=>setNotice("")} style={styles.dismiss}>×</button></div>}
         <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",padding:"9px 11px",marginBottom:13,borderRadius:9,background:isOnline?"#edf7ef":"#fff5e8",color:isOnline?GREEN:"#875315",fontSize:12}}>
