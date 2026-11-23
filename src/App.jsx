@@ -576,6 +576,7 @@ export default function App() {
     CAMEROON_REGIONS.forEach(region => { const x=(adminOverview.regions||[]).find(item=>item.code===region.id); rows.push(["Répartition géographique","Région",region.name,x?.count||0]); });
     CAMEROON_DEPARTMENTS.forEach(department => { const x=(adminOverview.departments||[]).find(item=>item.code===department.id); rows.push(["Répartition géographique","Département",department.name,x?.count||0]); });
     (adminOverview.arrondissements || []).forEach(x => rows.push(["Répartition géographique","Arrondissement",x.name,x.count]));
+    (adminOverview.localities || []).forEach(x => rows.push(["Répartition géographique","Ville / localité",x.name,x.count]));
     (adminOverview.registrations_by_month || []).forEach(x => rows.push(["Inscriptions","Mois",x.month,x.count]));
     (adminOverview.species || []).forEach(x => rows.push(["Activités","Espèce",x.name,x.count]));
     const csv = rows.map(row => row.map(value => '"' + String(value ?? "").replace(/"/g,'""') + '"').join(";")).join("\r\n");
@@ -921,7 +922,8 @@ export default function App() {
         if (!region || !department || !arrondissement || department.region_id !== region.id || arrondissement.department_id !== department.id) {
           throw new Error("Sélectionne correctement la région, le département et l’arrondissement de l’exploitation.");
         }
-        const locality = form.locality?.trim() || null;
+        const locality = form.locality?.trim();
+        if (!locality) throw new Error("Indique la ville, le village ou la localité de l’exploitation.");
         const locationParts = [locality, arrondissement.name, department.name, region.name, "Cameroun"].filter(Boolean);
         const farmRow={
           id:makeLocalId(), owner_id:session.user.id, name:form.farm_name?.trim() || "Mon exploitation",
@@ -2069,6 +2071,8 @@ export default function App() {
           <div style={styles.tableWrap}><table style={styles.table}><thead><tr><th>Département</th><th>Région</th><th>Exploitations</th></tr></thead><tbody>{CAMEROON_DEPARTMENTS.map(department=>{const x=(adminOverview.departments||[]).find(item=>item.code===department.id);return <tr key={department.id}><td>{department.name}</td><td>{geoLabel(department.region_id,CAMEROON_REGIONS)}</td><td>{Number(x?.count||0).toLocaleString("fr-FR")}</td></tr>})}</tbody></table></div>
           <h4 style={{color:GREEN,margin:"18px 0 8px"}}>Par arrondissement</h4>
           <div style={styles.tableWrap}><table style={styles.table}><thead><tr><th>Arrondissement</th><th>Département</th><th>Région</th><th>Exploitations</th></tr></thead><tbody>{(adminOverview.arrondissements||[]).map(x=><tr key={x.code||x.name}><td>{x.name}</td><td>{x.department||"—"}</td><td>{x.region||"—"}</td><td>{Number(x.count).toLocaleString("fr-FR")}</td></tr>)}</tbody></table></div>
+          <h4 style={{color:GREEN,margin:"18px 0 8px"}}>Par ville / village / localité</h4>
+          <div style={styles.tableWrap}><table style={styles.table}><thead><tr><th>Ville / localité</th><th>Arrondissement</th><th>Département</th><th>Région</th><th>Exploitations</th></tr></thead><tbody>{(adminOverview.localities||[]).map(x=><tr key={x.key}><td>{x.name}</td><td>{x.arrondissement||"—"}</td><td>{x.department||"—"}</td><td>{x.region||"—"}</td><td>{Number(x.count).toLocaleString("fr-FR")}</td></tr>)}</tbody></table></div>
         </div>
         <div style={styles.twoCols}>
           <div style={styles.panel}><h3 style={styles.panelTitle}>Inscriptions par mois</h3>{(adminOverview.registrations_by_month||[]).length?(adminOverview.registrations_by_month||[]).map(x=><div key={x.month} style={styles.listRow}><span>{x.month}</span><b>{x.count}</b></div>):<Empty text="Aucune inscription à afficher."/>}</div>
@@ -2113,7 +2117,7 @@ export default function App() {
       const department=CAMEROON_DEPARTMENTS.find(x=>x.id===form.department_code);
       const arrondissement=CAMEROON_ARRONDISSEMENTS.find(x=>x.id===form.arrondissement_code);
       if(!region||!department||!arrondissement||department.region_id!==region.id||arrondissement.department_id!==department.id){setError("Sélectionne correctement la région, le département et l’arrondissement.");setBusy(false);return;}
-      const locality=form.locality?.trim()||null;
+      const locality=form.locality?.trim();if(!locality){setError("Indique la ville, le village ou la localité de l’exploitation.");setBusy(false);return;}
       const location=[locality,arrondissement.name,department.name,region.name,"Cameroun"].filter(Boolean).join(", ");
       const {error}=await supabase.from("farms").update({
         name:form.name?.trim(),location,country_code:"CM",country_name:"Cameroun",
@@ -2128,7 +2132,7 @@ export default function App() {
       <Field label="Région"><select style={inputStyle} value={form.region_code||""} onChange={e=>{set("region_code",e.target.value);set("department_code","");set("arrondissement_code","");}} required><option value="">Choisir une région</option>{CAMEROON_REGIONS.map(x=><option key={x.id} value={x.id}>{x.name}</option>)}</select></Field>
       <Field label="Département"><select style={inputStyle} value={form.department_code||""} onChange={e=>{set("department_code",e.target.value);set("arrondissement_code","");}} required disabled={!form.region_code}><option value="">Choisir un département</option>{CAMEROON_DEPARTMENTS.filter(x=>x.region_id===form.region_code).map(x=><option key={x.id} value={x.id}>{x.name}</option>)}</select></Field>
       <Field label="Arrondissement"><select style={inputStyle} value={form.arrondissement_code||""} onChange={e=>set("arrondissement_code",e.target.value)} required disabled={!form.department_code}><option value="">Choisir un arrondissement</option>{CAMEROON_ARRONDISSEMENTS.filter(x=>x.department_id===form.department_code).map(x=><option key={x.id} value={x.id}>{x.name}</option>)}</select></Field>
-      <Field label="Ville / village / localité (facultatif)"><input style={inputStyle} value={form.locality||""} onChange={e=>set("locality",e.target.value)} placeholder="Ex. Dschang, Fongo-Tongo, quartier…"/></Field>
+      <Field label="Ville / village / localité"><input style={inputStyle} value={form.locality||""} onChange={e=>set("locality",e.target.value)} placeholder="Ex. Dschang, Fongo-Tongo, quartier…" required/></Field>
     </div>);
     if (modal==="group") return modalForm(form.group_id?"Modifier la fiche d’élevage":"Ajouter une fiche d’élevage",saveGroup,<div style={{display:"grid",gap:12}}>
       {!activeFarm&&<><p style={{fontSize:12,color:"#65736a",margin:0}}>Première utilisation : indique la localisation administrative de ton exploitation. Ces informations permettront d’établir des statistiques géographiques nationales anonymisées.</p>
