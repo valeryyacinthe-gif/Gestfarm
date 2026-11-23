@@ -315,16 +315,26 @@ export default function App() {
 
   useEffect(() => {
     if (!session?.user?.id) { setWorkspaceChoiceOpen(false); return; }
-    const savedMode = session.user.user_metadata?.gestfarm_workspace_mode;
+    const user = session.user;
+    const active = farms.find((farm) => farm.id === (selectedFarm || farms[0]?.id));
+    // Un espace appartenant à un autre promoteur utilise son interface entreprise.
+    // Le mode personnel du membre reste enregistré pour ses propres exploitations.
+    if (active && active.owner_id !== user.id) {
+      setWorkspaceMode("enterprise");
+      setWorkspaceChoiceOpen(false);
+      return;
+    }
+    const modes = user.user_metadata?.gestfarm_workspace_modes || {};
+    const savedMode = (active && modes[active.id]) || modes.__personal_default || user.user_metadata?.gestfarm_workspace_mode;
     if (savedMode === "individual" || savedMode === "enterprise") {
       setWorkspaceMode(savedMode);
       setWorkspaceChoiceOpen(false);
     } else {
-      // Les anciens comptes choisissent leur interface sans modifier leurs données ni leurs droits.
+      // Les anciens comptes choisissent le mode de leur espace personnel, sans toucher aux droits.
       setWorkspaceMode("enterprise");
       setWorkspaceChoiceOpen(true);
     }
-  }, [session?.user?.id, session?.user?.user_metadata?.gestfarm_workspace_mode]);
+  }, [session?.user?.id, session?.user?.user_metadata?.gestfarm_workspace_mode, session?.user?.user_metadata?.gestfarm_workspace_modes, farms, selectedFarm]);
   useEffect(() => { if (session?.user) loadAll(); }, [session?.user?.id]);
   useEffect(() => { if (session?.user?.id && (page === "suggestions" || page === "adminSuggestions")) loadSuggestions(); }, [session?.user?.id, page]);
   useEffect(() => {
@@ -750,8 +760,17 @@ export default function App() {
   }
   async function saveWorkspaceMode(mode) {
     if (!session?.user || !["individual", "enterprise"].includes(mode)) return;
+    if (activeFarm && activeFarm.owner_id !== session.user.id) {
+      setWorkspaceError("Le mode de cet espace professionnel est géré par son promoteur. Tes droits restent définis par ses autorisations.");
+      return;
+    }
     setWorkspaceBusy(true); setWorkspaceError(""); setError(""); setNotice("");
-    const { data, error } = await supabase.auth.updateUser({ data: { gestfarm_workspace_mode: mode } });
+    const previousModes = session.user.user_metadata?.gestfarm_workspace_modes || {};
+    const workspaceKey = activeFarm?.id || "__personal_default";
+    const nextModes = { ...previousModes, [workspaceKey]: mode, __personal_default: mode };
+    const { data, error } = await supabase.auth.updateUser({
+      data: { gestfarm_workspace_mode: mode, gestfarm_workspace_modes: nextModes }
+    });
     if (error) {
       setWorkspaceError("Impossible d’enregistrer le mode d’interface : " + error.message);
     } else {
@@ -760,7 +779,7 @@ export default function App() {
       setWorkspaceChoiceOpen(false);
       if (mode === "individual" && (page === "team" || page === "tasks")) setPage("dashboard");
       if (data?.user) setSession(current => current ? { ...current, user: data.user } : current);
-      setNotice(mode === "individual" ? "Interface Éleveur individuel activée." : "Interface Entreprise activée. Toutes les fonctionnalités autorisées sont conservées.");
+      setNotice(mode === "individual" ? "Interface Éleveur individuel activée pour cet espace." : "Interface Entreprise activée pour cet espace. Les autorisations restent inchangées.");
     }
     setWorkspaceBusy(false);
   }
@@ -1755,8 +1774,8 @@ export default function App() {
       <div style={styles.panel}>
         <h3 style={styles.panelTitle}>Compte connecté</h3>
         <p style={{fontSize:13,margin:"0 0 18px"}}>{session?.user?.email || "Adresse e-mail indisponible"}</p>
-        <h3 style={styles.panelTitle}>Mon interface de travail</h3>
-        <p style={{fontSize:13,lineHeight:1.6,color:"#536258"}}>Ce choix adapte les menus à ton organisation. Il ne modifie ni tes exploitations, ni tes données, ni les autorisations attribuées par les promoteurs.</p>
+        <h3 style={styles.panelTitle}>Interface de cet espace de travail</h3>
+        <p style={{fontSize:13,lineHeight:1.6,color:"#536258"}}>Ce choix adapte les menus de ton espace personnel actif. Dans une exploitation dont tu es membre, l’interface Entreprise s’affiche automatiquement ; les autorisations restent définies par le promoteur.</p>
         <div style={{display:"flex",gap:9,flexWrap:"wrap",marginBottom:20}}>
           <Button secondary disabled={workspaceBusy || workspaceMode === "individual"} onClick={()=>saveWorkspaceMode("individual")}>Éleveur individuel</Button>
           <Button secondary disabled={workspaceBusy || workspaceMode === "enterprise"} onClick={()=>saveWorkspaceMode("enterprise")}>Entreprise / exploitation professionnelle</Button>
@@ -2150,7 +2169,7 @@ export default function App() {
           <section role="dialog" aria-modal="true" aria-labelledby="workspace-choice-title" className="gf-modal" style={{...styles.modal,width:"min(100%,680px)"}}>
             <div style={{textAlign:"center",marginBottom:18}}>
               <h2 id="workspace-choice-title" style={{color:GREEN,margin:"0 0 8px"}}>Bienvenue sur GESTFARM</h2>
-              <p style={{fontSize:14,lineHeight:1.6,color:"#5c6b61",margin:0}}>Choisis l’interface qui correspond à ton activité. Tu pourras modifier ce choix plus tard dans « Compte et suppression ».</p>
+              <p style={{fontSize:14,lineHeight:1.6,color:"#5c6b61",margin:0}}>Choisis l’interface de ton espace personnel actif. Lorsque tu travailles dans l’exploitation d’un autre promoteur, GESTFARM passe automatiquement à l’interface Entreprise. Tu pourras modifier ton choix pour ton espace personnel dans « Compte et suppression ».</p>
             </div>
             <div style={styles.cardsGrid}>
               <div style={{border:"1px solid #dce8df",borderRadius:13,padding:16,display:"grid",gap:10}}>
@@ -2165,7 +2184,7 @@ export default function App() {
               </div>
             </div>
             {workspaceError && <p style={styles.error}>{workspaceError}</p>}
-            <p style={{fontSize:11,color:"#7b887f",lineHeight:1.5,margin:"14px 0 0"}}>Le mode choisi ne donne aucun droit supplémentaire : les accès aux exploitations restent contrôlés par les autorisations du compte et de chaque promoteur.</p>
+            <p style={{fontSize:11,color:"#7b887f",lineHeight:1.5,margin:"14px 0 0"}}>Le mode choisi adapte uniquement l’interface de ton espace personnel. Dans les exploitations où tu es membre, les droits restent contrôlés par le promoteur et l’interface Entreprise est utilisée.</p>
           </section>
         </div>}
         {error && <div style={styles.errorBanner}><AlertCircle size={17}/>{error}<button onClick={()=>setError("")} style={styles.dismiss}>×</button></div>}
