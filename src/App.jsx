@@ -1385,16 +1385,15 @@ export default function App() {
         const species = cycles.find(c=>c.id===destination?.cycle_id)?.species;
         if (!destination || species !== batch.species || destination.id === batch.source_group_id) throw new Error("Choisis un lot d’engraissement de la même espèce, différent du lot des reproducteurs.");
         if (!Number.isInteger(quantity) || quantity < 1 || quantity > available) throw new Error(`Quantité invalide. Jeunes sevrés encore disponibles : ${Math.max(0,available)}.`);
-        const { data: updatedDestination, error: destError } = await supabase.from("animal_groups").update({ current_count: Number(destination.current_count || 0) + quantity }).eq("id", destination.id).select("id").maybeSingle();
-        if (destError) throw destError;
-        if (!updatedDestination) throw new Error("L’effectif du lot de destination n’a pas pu être actualisé.");
-        patch.transferred_count = Number(batch.transferred_count || 0) + quantity;
-        patch.destination_group_id = destination.id;
-        const { data: updatedBatch, error: batchError } = await supabase.from("gestfarm_offspring_batches").update(patch).eq("id", batch.id).select("id").maybeSingle();
-        if (batchError || !updatedBatch) {
-          await supabase.from("animal_groups").update({ current_count: Number(destination.current_count || 0) }).eq("id", destination.id);
-          throw batchError || new Error("La fiche de portée n’a pas été mise à jour.");
-        }
+        // Opération atomique côté PostgreSQL : verrouille la portée et le lot
+        // destinataire pour éviter les doubles transferts en cas d'actions simultanées.
+        const { error: transferError } = await supabase.rpc("gestfarm_transfer_offspring_batch", {
+          p_batch_id: batch.id,
+          p_destination_group_id: destination.id,
+          p_quantity: quantity,
+          p_destination_notes: patch.destination_notes
+        });
+        if (transferError) throw transferError;
       } else {
         const { data: updatedBatch, error } = await supabase.from("gestfarm_offspring_batches").update(patch).eq("id", batch.id).select("id").maybeSingle();
         if (error) throw error;
