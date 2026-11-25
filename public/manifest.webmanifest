@@ -12,10 +12,10 @@
   "theme_color": "#174d35",
   "icons": [
     {
-      "src": "/gestfarm-icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
+      "src": "https://raw.githubusercontent.com/valeryyacinthe-gif/GESTFARM-Android/main/assets/gestfarm-icon.png",
+      "sizes": "545x545",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
