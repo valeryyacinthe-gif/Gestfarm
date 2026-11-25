@@ -1,0 +1,21 @@
+{
+  "id": "/",
+  "name": "GESTFARM by KS",
+  "short_name": "GESTFARM",
+  "description": "Gestion technico-économique des élevages.",
+  "lang": "fr-CM",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#ffffff",
+  "theme_color": "#174d35",
+  "icons": [
+    {
+      "src": "/gestfarm-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
